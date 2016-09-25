@@ -52,7 +52,9 @@ public class Controller {
         contadorLineas();
         codeArea.appendText("Hola\n");
         codeArea.appendText("Mundo\n");
-        codeArea.appendText("Gitano");
+        codeArea.appendText("Gitano priemra segunda tercera cuarta");
+        codeArea.moveTo(1,0);//Primer digito comenzando de 0 indica linea, segundo indica columna
+        codeArea.selectLine();//Resalta toda la linea
     }
 
     public void contadorLineas(){
