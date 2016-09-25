@@ -55,6 +55,7 @@ public class Controller {
         codeArea.appendText("Gitano priemra segunda tercera cuarta");
         codeArea.moveTo(1,0);//Primer digito comenzando de 0 indica linea, segundo indica columna
         codeArea.selectLine();//Resalta toda la linea
+        System.out.println(codeArea.getText(2));//Obtenemos el texto de la linea 3 con el getText. SOLO PRUEBA
     }
 
     public void contadorLineas(){
