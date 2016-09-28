@@ -33,7 +33,7 @@ public class Controller implements Initializable{
     @FXML
     CodeArea codeArea;
     @FXML
-    TextArea txtMensajes,txtID,txtLinea,txtToken,txtIdentificador;
+    TextArea txtMensajes;
     @FXML
     ListView lsErrores;
 
@@ -230,7 +230,15 @@ public class Controller implements Initializable{
     public static List<String> lexico_Identificador = new ArrayList<String>();
 
 
+
+
     public void generarLexico(){
+
+        lexico_ID.clear();
+        lexico_Linea.clear();
+        lexico_Token.clear();
+        lexico_Identificador.clear();
+
         String prueba;
         int contadorID=1;
         int contadorLinea=1;
@@ -263,7 +271,7 @@ public class Controller implements Initializable{
 
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
         ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","byte","entero"
-        ,"largo","flotanre","bool","doble","caracter","cadena","mod","libreria","no","y","o","verdad","falso","seleccion","si"
+        ,"largo","flotante","bool","doble","caracter","cadena","mod","libreria","no","y","o","verdad","falso","seleccion","si"
                 ,"sino","evalua","por_omision","finsel","final","finhazlo","hazlo_si","repite","finrepite","como","para"
                 ,"finpara","modo","finfunc","funcion","procemiento","finproc","seccion"
         );
@@ -271,6 +279,7 @@ public class Controller implements Initializable{
         palabrasReservadas.addAll(Reservadas);
     }
 
+    /*
     public void llenarTablas_Lexico(){
         for (int i=0;i<lexico_ID.size();i++)
             txtID.appendText(Integer.toString(lexico_ID.get(i)));
@@ -281,6 +290,7 @@ public class Controller implements Initializable{
         for (int i=0;i<lexico_Identificador.size();i++)
             txtIdentificador.appendText(lexico_Identificador.get(i));
     }
+    */
 
     public void pruebasListas(){
         for (int i=0;i<lexico_ID.size();i++)

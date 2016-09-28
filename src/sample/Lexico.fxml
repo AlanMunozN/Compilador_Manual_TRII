@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" >
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Lexico_Controller">
    <top>
       <HBox prefHeight="69.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -30,4 +30,7 @@
          </children>
       </HBox>
    </center>
+   <bottom>
+      <Button fx:id="btnMostrar_Tabla" mnemonicParsing="false" text="Mostrar Tabla" BorderPane.alignment="CENTER" onAction="#llenarTablas_Lexico"/>
+   </bottom>
 </BorderPane>
