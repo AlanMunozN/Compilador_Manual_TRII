@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.org.apache.regexp.internal.RE;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,11 +20,10 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -33,7 +33,7 @@ public class Controller implements Initializable{
     @FXML
     CodeArea codeArea;
     @FXML
-    TextArea txtMensajes;
+    TextArea txtMensajes,txtID,txtLinea,txtToken,txtIdentificador;
     @FXML
     ListView lsErrores;
 
@@ -72,6 +72,7 @@ public class Controller implements Initializable{
         colorPalabras_Reservadas();
         contadorLineas();
         inicializaErrores_Prueba();
+        palabrasLexico();
     }
 
     File archivo;
@@ -217,5 +218,78 @@ public class Controller implements Initializable{
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
 
+        generarLexico();
+        //llenarTablas_Lexico();
+        pruebasListas();
+
+    }
+
+    public static List<Integer> lexico_ID = new ArrayList<Integer>();
+    public static List<Integer> lexico_Linea = new ArrayList<Integer>();
+    public static List<String> lexico_Token = new ArrayList<String>();
+    public static List<String> lexico_Identificador = new ArrayList<String>();
+
+
+    public void generarLexico(){
+        String prueba;
+        int contadorID=1;
+        int contadorLinea=1;
+        int g=codeArea.getLength();
+        String[] lineasCodeArea=codeArea.getText().split("\\n");
+        System.out.println("Length: "+g);
+
+        String patternString = "\\b(" + String.join("|",palabrasReservadas) + ")\\b";
+        Pattern pattern = Pattern.compile(patternString);
+
+        for(int i=0;i<lineasCodeArea.length;i++) {
+            prueba="";
+            codeArea.moveTo(i, 0);
+            codeArea.selectLine();
+            prueba=(String)codeArea.getSelectedText();
+            Matcher matcher = pattern.matcher(prueba);
+            while (matcher.find()){
+                lexico_ID.add(contadorID);
+                lexico_Linea.add(contadorLinea);
+                lexico_Token.add(matcher.group());
+                lexico_Identificador.add("Palabra Reservada");
+                contadorID++;
+            }
+            contadorLinea++;
+            System.out.println("Datos de la linea "+(i+1)+" : "+ prueba);
+        }
+    }
+
+    List<String> palabrasReservadas = new ArrayList<String>();
+
+    public void palabrasLexico(){//Poblamos las lista para verificar las palabras
+        ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","byte","entero"
+        ,"largo","flotanre","bool","doble","caracter","cadena","mod","libreria","no","y","o","verdad","falso","seleccion","si"
+                ,"sino","evalua","por_omision","finsel","final","finhazlo","hazlo_si","repite","finrepite","como","para"
+                ,"finpara","modo","finfunc","funcion","procemiento","finproc","seccion"
+        );
+
+        palabrasReservadas.addAll(Reservadas);
+    }
+
+    public void llenarTablas_Lexico(){
+        for (int i=0;i<lexico_ID.size();i++)
+            txtID.appendText(Integer.toString(lexico_ID.get(i)));
+        for (int i=0;i<lexico_Linea.size();i++)
+            txtLinea.appendText(Integer.toString(lexico_Linea.get(i)));
+        for (int i=0;i<lexico_Token.size();i++)
+            txtToken.appendText(lexico_Token.get(i));
+        for (int i=0;i<lexico_Identificador.size();i++)
+            txtIdentificador.appendText(lexico_Identificador.get(i));
+    }
+
+    public void pruebasListas(){
+        for (int i=0;i<lexico_ID.size();i++)
+            System.out.println("ID: "+lexico_ID.get(i));
+        for (int i=0;i<lexico_Linea.size();i++)
+            System.out.println("Linea: "+lexico_Linea.get(i));
+        for (int i=0;i<lexico_Token.size();i++)
+            System.out.println("Token: "+lexico_Token.get(i));
+        for (int i=0;i<lexico_Identificador.size();i++)
+            System.out.println("Identificador: "+lexico_Identificador.get(i));
     }
 }
