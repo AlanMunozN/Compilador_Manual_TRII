@@ -232,51 +232,227 @@ public class Controller implements Initializable{
 
 
 
-    public void generarLexico(){
+    public void generarLexico(){//Enviar el token y que busque en método
 
         lexico_ID.clear();
         lexico_Linea.clear();
         lexico_Token.clear();
         lexico_Identificador.clear();
 
-        String prueba;
+        String patternString_R = "\\b(" + String.join("|",palabrasReservadas) + ")\\b";
+        Pattern patternReservadas = Pattern.compile(patternString_R);
+
+        String patternString_M = "\\b(" + String.join("|",operadoresMatematicos) + ")\\b";
+        //Pattern patternMatematicos = Pattern.compile(patternString_M);
+
+        String patternString_C = "\\b(" + String.join("|",Compara) + ")\\b";
+        //Pattern patternComparador = Pattern.compile(patternString_C);
+
+        String patternString_S = "\\b(" + String.join("|",Separador) + ")\\b";
+        //Pattern patternSeparador = Pattern.compile(patternString_S);
+
+        String patternString_E = "\\b(" + String.join("|","([0-9]*)") + ")\\b";
+        //Pattern patternEntero = Pattern.compile(patternString_E);
+
+        String patternString_Cad = "\\b(" + String.join("|","([\"][a-zA-Z][\"]*)") + ")\\b";
+        //Pattern patternCadena = Pattern.compile(patternString_Cad);
+
+
+        String prueba="";
         int contadorID=1;
         int contadorLinea=1;
         int g=codeArea.getLength();
         String[] lineasCodeArea=codeArea.getText().split("\\n");
         System.out.println("Length: "+g);
 
-        String patternString = "\\b(" + String.join("|",palabrasReservadas) + ")\\b";
-        Pattern pattern = Pattern.compile(patternString);
+        /*
+        String palabras = ("(programa|var|inicio|fin|byte|entero|largo|flotante|bool|doble|caracter|cadena|mod|libreria|o|y|no|verdad|falso|seleccion|si|sino|evalua|por_omision|finsel|final|finhazlo|hazlo_si|repite|finrepite|como|para|finpara|modo|finfunc|funcion|procedimiento|finproc|seccion)" +
+                "|([+|-|/|*|**]+)" +
+                "|([<|<=|>|>=|==|<>]+)" +
+                "|(;)" +
+                "|([0-9]*)" +
+                "|([a-zA-Z]+)" +
+                "|(=)");
+        */
+
+        String Reserv = "(programa|var|inicio|fin|byte|entero|largo|flotante|bool|doble|caracter|cadena|mod|libreria|no|y|o|verdad" +
+                "falso|seleccoion|si|finpara|modo|finfuno|funcion|procedimiento|finproc|seccion|sino|evalua|por_omisions|finsel|final" +
+                "|hinhazlo|hazlo_si|repite|finrepite|como|para)";
+
+        String comp = (".*(<|>|>=|<=|==|<>).*");
+        String numero = ("([0-9]+)");
+        String sep = (".*(;).*");
+        String mat = (".*([+|-|/|*|**|mod]).*");
+        String operador = "([*][*]|[+]|-|[*]|mod)";
+        String car = ("([a-zA-Z]+)");
+        String asig = "(=)";
+        String cadena = "([\"]\\w*\\s*[\"])";
+        String cadenaCara = "([\"].*[\"])";
+        String tipoDato = "(bool|entero|largo|byte)";
+        String operadorLogico = "(y|o)";
+        String operadorNegacion = "(no)";
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String detectarCadena = "(\")";
+
+        int contarComilla=0;
+
+        //Pattern p = Pattern.compile(Reserv+"|"+cadenaCara+"|"+sep+"|"+operador+"|"+numero+"|"+comp+"|"+asig);
+
+        String juntaCadena="";
+        String juntaComentario_Linea="";
+        String juntaComentario_Bloque="";
+        String numeroFlotante="";
+
+        boolean comentarioBloque_Encontrado=false;
 
         for(int i=0;i<lineasCodeArea.length;i++) {
             prueba="";
             codeArea.moveTo(i, 0);
             codeArea.selectLine();
             prueba=(String)codeArea.getSelectedText();
-            Matcher matcher = pattern.matcher(prueba);
-            while (matcher.find()){
-                lexico_ID.add(contadorID);
-                lexico_Linea.add(contadorLinea);
-                lexico_Token.add(matcher.group());
-                lexico_Identificador.add("Palabra Reservada");
-                contadorID++;
+            /*
+            Matcher m =p.matcher(prueba);
+            while (m.find()){
+                if(m.group(1)!=null){
+                    System.out.println("Reservada: "+m.group(1));
+                }
+                if(m.group(2)!=null){
+                    System.out.println("Cadena: "+m.group(2));
+                }
+                if(m.group(3)!=null){
+                    System.out.println("Separador: "+m.group(3));
+                }
+                if(m.group(4)!=null){
+                    System.out.println("Operador: "+m.group(4));
+                }
+                if(m.group(5)!=null){
+                    System.out.println("Numero: "+m.group(5));
+                }
+                if(m.group(6)!=null){
+                    System.out.println("Comparador: "+m.group(6));
+                }
+                if(m.group(7)!=null){
+                    System.out.println("Asignacion: "+m.group(7));
+                }
             }
+            */
+
+
+            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})");
+            juntaCadena="";
+            juntaComentario_Linea="";
+            numeroFlotante="";
+            boolean cadenaEncontrada=false;
+            boolean comentarioLinea_Encontrado=false;
+            for(int j=0;j<sinEspacios.length;j++){
+                System.out.println("sinEspacios: "+sinEspacios[j]);
+                if(sinEspacios[j].matches(comp) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Comparador: "+sinEspacios[j]);
+                }
+                else if(sinEspacios[j].matches(operador) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Operadores: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(patternString_R) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Reservada: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(tipoDato) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Tipo Dato: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(operadorLogico) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Operador Lógico: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(operadorNegacion) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Operador Negación: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches("\"") || cadenaEncontrada==true  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    cadenaEncontrada=true;
+                    juntaCadena+=sinEspacios[j];
+                    if(sinEspacios[j].equals("\""))
+                        contarComilla++;
+                    if(contarComilla==2) {
+                        cadenaEncontrada = false;
+                        System.out.println("Cadena: "+juntaCadena);
+                    }
+                }
+                if(sinEspacios[j].matches("(\\{)") || comentarioLinea_Encontrado==true && cadenaEncontrada==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Entró");
+                    comentarioLinea_Encontrado=true;
+                    juntaComentario_Linea+=sinEspacios[j];
+                    System.out.println("Junta Linea: "+juntaComentario_Linea);
+                    if(sinEspacios[j].equals("}")) {
+                        comentarioLinea_Encontrado=false;
+                        System.out.println("Comentario Linea: "+juntaComentario_Linea);
+                    }
+                }
+                if(sinEspacios[j].matches("(\\{//)") || comentarioBloque_Encontrado==true && comentarioLinea_Encontrado==false && cadenaEncontrada==false){
+                    System.out.println("Entró");
+                    comentarioBloque_Encontrado=true;
+                    juntaComentario_Bloque+=sinEspacios[j];
+                    System.out.println("Junta Bloque: "+juntaComentario_Bloque);
+                    if(sinEspacios[j].matches("(//})")) {
+                        //System.out.println("holi");
+                        comentarioBloque_Encontrado=false;
+                        System.out.println("Comentario Bloque: "+juntaComentario_Bloque);
+                        juntaComentario_Bloque="";
+                    }
+                }
+                if(sinEspacios[j].matches(sep) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Separador: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(numero) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    int valor1=0, valor2=0;
+                    valor1=j+1;
+                    valor2=j+2;
+                    if(valor1<sinEspacios.length){
+                        if(sinEspacios[j+1].equals(".")){
+                            if(valor2<sinEspacios.length){
+                                if (sinEspacios[j + 2].matches("([0-9]+)")) {
+                                    numeroFlotante = sinEspacios[j] + sinEspacios[j + 1] + sinEspacios[j + 2];
+                                    System.out.println("Flotante: " + numeroFlotante);
+                                    j = j + 2;
+                                }
+                            }
+                        }
+                    }
+                    else
+                        System.out.println("Entero: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(asig) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Asignación: "+sinEspacios[j]);
+                }
+                if(sinEspacios[j].matches(Identificador) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Identificador: "+sinEspacios[j]);
+                }
+            }
+
             contadorLinea++;
             System.out.println("Datos de la linea "+(i+1)+" : "+ prueba);
         }
     }
 
     List<String> palabrasReservadas = new ArrayList<String>();
+    List<String> operadoresMatematicos = new ArrayList<String>();
+    List<String> Compara = new ArrayList<String>();
+    List<String> Separador = new ArrayList<String>();
+
+
 
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
-        ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","byte","entero"
-        ,"largo","flotante","bool","doble","caracter","cadena","mod","libreria","no","y","o","verdad","falso","seleccion","si"
+        ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
                 ,"sino","evalua","por_omision","finsel","final","finhazlo","hazlo_si","repite","finrepite","como","para"
-                ,"finpara","modo","finfunc","funcion","procemiento","finproc","seccion"
+                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion"
         );
 
+        ObservableList<String> Matematicos = FXCollections.observableArrayList("+","-","/","*","**");
+
+        ObservableList<String> Comparadores = FXCollections.observableArrayList(">",">=","<","<=","==","<>");
+
+        ObservableList<String> Separadores = FXCollections.observableArrayList(";");
+
         palabrasReservadas.addAll(Reservadas);
+        operadoresMatematicos.addAll(Matematicos);
+        Compara.addAll(Comparadores);
+        Separador.addAll(Separadores);
     }
 
     /*
