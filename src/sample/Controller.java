@@ -37,17 +37,12 @@ public class Controller implements Initializable{
     @FXML
     ListView lsErrores;
 
+    ObservableList<String> itemsErrores = FXCollections.observableArrayList();
+
     private static final String[] KEYWORDS = new String[] {
-            "abstract", "assert", "boolean", "break", "byte",
-            "case", "catch", "char", "class", "const",
-            "continue", "default", "do", "double", "else",
-            "enum", "extends", "final", "finally", "float",
-            "for", "goto", "if", "implements", "import",
-            "instanceof", "int", "interface", "long", "native",
-            "new", "package", "private", "protected", "public",
-            "return", "short", "static", "strictfp", "super",
-            "switch", "synchronized", "this", "throw", "throws",
-            "transient", "try", "void", "volatile", "while"
+            "programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
+            ,"sino","evalua","por_omision","finsel","finsi","final","finhazlo","hazlo_si","repite","finrepite","como","para"
+            ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","bool","entero","largo","byte","entonces","de"
     };
 
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
@@ -71,7 +66,7 @@ public class Controller implements Initializable{
     public void initialize(URL location, ResourceBundle resources){
         colorPalabras_Reservadas();
         contadorLineas();
-        inicializaErrores_Prueba();
+        //inicializaErrores_Prueba();
         palabrasLexico();
     }
 
@@ -220,7 +215,10 @@ public class Controller implements Initializable{
 
         generarLexico();
         //llenarTablas_Lexico();
-        pruebasListas();
+        //pruebasListas();
+        if(itemsErrores != null && !itemsErrores.isEmpty()){
+            lsErrores.setItems(itemsErrores);
+        }
 
     }
 
@@ -228,6 +226,7 @@ public class Controller implements Initializable{
     public static List<Integer> lexico_Linea = new ArrayList<Integer>();
     public static List<String> lexico_Token = new ArrayList<String>();
     public static List<String> lexico_Identificador = new ArrayList<String>();
+    public static List<String> erroresGenerados = new ArrayList<String>();
 
 
 
@@ -238,6 +237,8 @@ public class Controller implements Initializable{
         lexico_Linea.clear();
         lexico_Token.clear();
         lexico_Identificador.clear();
+        txtMensajes.setText("");
+        itemsErrores.clear();
 
         String patternString_R = "\\b(" + String.join("|",palabrasReservadas) + ")\\b";
         Pattern patternReservadas = Pattern.compile(patternString_R);
@@ -281,17 +282,18 @@ public class Controller implements Initializable{
 
         String comp = (".*(<|>|>=|<=|==|<>).*");
         String numero = ("([0-9]+)");
-        String sep = (".*(;).*");
+        String sep = "([]]|[\\[]|.*(;).*)";
         String mat = (".*([+|-|/|*|**|mod]).*");
         String operador = "([*][*]|[+]|-|[*]|mod)";
         String car = ("([a-zA-Z]+)");
-        String asig = "(=)";
+        String asig = "([.][.]|:=|:)";
         String cadena = "([\"]\\w*\\s*[\"])";
         String cadenaCara = "([\"].*[\"])";
-        String tipoDato = "(bool|entero|largo|byte)";
+        String tipoDato = "(bool|entero|largo|byte|string)";
         String operadorLogico = "(y|o)";
         String operadorNegacion = "(no)";
-        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254}|arreglo)";
+        String cientifico = "([0-9]+[E])";
         String detectarCadena = "(\")";
 
         int contarComilla=0;
@@ -310,6 +312,7 @@ public class Controller implements Initializable{
             codeArea.moveTo(i, 0);
             codeArea.selectLine();
             prueba=(String)codeArea.getSelectedText();
+            boolean linea_conError=false;
             /*
             Matcher m =p.matcher(prueba);
             while (m.find()){
@@ -338,7 +341,7 @@ public class Controller implements Initializable{
             */
 
 
-            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})");
+            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})|(?<=:)|(?=:)|(?<==)|(?==)|(?<=\")|(?=\")|(?<=])|(?=])|(?<=\\[)|(?=\\[)|(?<=[.][.])|(?=[.][.])");
             juntaCadena="";
             juntaComentario_Linea="";
             numeroFlotante="";
@@ -348,33 +351,62 @@ public class Controller implements Initializable{
                 System.out.println("sinEspacios: "+sinEspacios[j]);
                 if(sinEspacios[j].matches(comp) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Comparador: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Comparador");
                 }
                 else if(sinEspacios[j].matches(operador) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Operadores: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Operador Matematico");
                 }
-                if(sinEspacios[j].matches(patternString_R) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(patternString_R) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Reservada: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Reservada");
                 }
-                if(sinEspacios[j].matches(tipoDato) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(tipoDato) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Tipo Dato: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Tipo Dato");
                 }
-                if(sinEspacios[j].matches(operadorLogico) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(operadorLogico) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Operador Lógico: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Operador Lógico");
                 }
-                if(sinEspacios[j].matches(operadorNegacion) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(operadorNegacion) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Operador Negación: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Operador Negación");
                 }
-                if(sinEspacios[j].matches("\"") || cadenaEncontrada==true  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches("\"") || cadenaEncontrada==true  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     cadenaEncontrada=true;
                     juntaCadena+=sinEspacios[j];
+                    System.out.println("Prueba: "+juntaCadena);
                     if(sinEspacios[j].equals("\""))
                         contarComilla++;
                     if(contarComilla==2) {
                         cadenaEncontrada = false;
                         System.out.println("Cadena: "+juntaCadena);
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(juntaCadena);
+                        lexico_Identificador.add("Cadena");
                     }
                 }
-                if(sinEspacios[j].matches("(\\{)") || comentarioLinea_Encontrado==true && cadenaEncontrada==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches("(\\{)") || comentarioLinea_Encontrado==true && cadenaEncontrada==false && comentarioBloque_Encontrado==false){
                     System.out.println("Entró");
                     comentarioLinea_Encontrado=true;
                     juntaComentario_Linea+=sinEspacios[j];
@@ -382,9 +414,13 @@ public class Controller implements Initializable{
                     if(sinEspacios[j].equals("}")) {
                         comentarioLinea_Encontrado=false;
                         System.out.println("Comentario Linea: "+juntaComentario_Linea);
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(juntaComentario_Linea);
+                        lexico_Identificador.add("Comentario Linea");
                     }
                 }
-                if(sinEspacios[j].matches("(\\{//)") || comentarioBloque_Encontrado==true && comentarioLinea_Encontrado==false && cadenaEncontrada==false){
+                else if(sinEspacios[j].matches("(\\{//)") || comentarioBloque_Encontrado==true && comentarioLinea_Encontrado==false && cadenaEncontrada==false){
                     System.out.println("Entró");
                     comentarioBloque_Encontrado=true;
                     juntaComentario_Bloque+=sinEspacios[j];
@@ -393,38 +429,133 @@ public class Controller implements Initializable{
                         //System.out.println("holi");
                         comentarioBloque_Encontrado=false;
                         System.out.println("Comentario Bloque: "+juntaComentario_Bloque);
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(juntaComentario_Bloque);
+                        lexico_Identificador.add("Comentario Bloque");
                         juntaComentario_Bloque="";
                     }
                 }
-                if(sinEspacios[j].matches(sep) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(sep) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Separador: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Separador");
                 }
-                if(sinEspacios[j].matches(numero) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(cientifico) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     int valor1=0, valor2=0;
                     valor1=j+1;
                     valor2=j+2;
+                    boolean notacion=false;
+                    String numeroCientifico="";
                     if(valor1<sinEspacios.length){
-                        if(sinEspacios[j+1].equals(".")){
+                        if(sinEspacios[j+1].matches("([+]|[-])")){
+                            notacion=true;
                             if(valor2<sinEspacios.length){
-                                if (sinEspacios[j + 2].matches("([0-9]+)")) {
-                                    numeroFlotante = sinEspacios[j] + sinEspacios[j + 1] + sinEspacios[j + 2];
-                                    System.out.println("Flotante: " + numeroFlotante);
+                                if(sinEspacios[j+2].matches("([0-9]+)")){
+                                    numeroCientifico=sinEspacios[j]+sinEspacios[j+1]+sinEspacios[j+2];
+                                    System.out.println("Cientifico: "+numeroCientifico);
+                                    lexico_ID.add(contadorID);
+                                    lexico_Linea.add(contadorLinea);
+                                    lexico_Token.add(numeroCientifico);
+                                    lexico_Identificador.add("Cientifico");
                                     j = j + 2;
                                 }
                             }
                         }
                     }
-                    else
-                        System.out.println("Entero: "+sinEspacios[j]);
                 }
-                if(sinEspacios[j].matches(asig) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(numero) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    int valor1=0, valor2=0;
+                    valor1=j+1;
+                    valor2=j+2;
+                    boolean noFloat=false;
+                    if(valor1<sinEspacios.length){
+                        if(sinEspacios[j+1].equals(".")){
+                            noFloat=true;
+                            if(valor2<sinEspacios.length){
+                                if (sinEspacios[j + 2].matches("([0-9]+)")) {
+                                    numeroFlotante = sinEspacios[j] + sinEspacios[j + 1] + sinEspacios[j + 2];
+                                    System.out.println("Flotante: " + numeroFlotante);
+                                    lexico_ID.add(contadorID);
+                                    lexico_Linea.add(contadorLinea);
+                                    lexico_Token.add(numeroFlotante);
+                                    lexico_Identificador.add("Flotante");
+                                    j = j + 2;
+                                }
+                            }
+                        }
+                    }
+                    if(noFloat==false){
+                        System.out.println("Entero: " + sinEspacios[j]);
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(sinEspacios[j]);
+                        lexico_Identificador.add("Entero");
+                    }
+                }
+                else if(sinEspacios[j].matches(":") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    int valor1=0;
+                    valor1=j+1;
+                    System.out.println(": Encontrados: ");
+                    boolean asignacionRandom=false;// :=
+                    String asignacionLoca="";
+                    if(valor1<sinEspacios.length){
+                        if(sinEspacios[j+1].matches("=")){
+                            asignacionRandom=true;
+                            asignacionLoca=sinEspacios[j]+sinEspacios[j+1];
+                            System.out.println("Asignación Random(:=): "+asignacionLoca);
+                            lexico_ID.add(contadorID);
+                            lexico_Linea.add(contadorLinea);
+                            lexico_Token.add(asignacionLoca);
+                            lexico_Identificador.add("Asignación");
+                            j = j + 1;
+                        }
+                    }
+                    if(asignacionRandom==false){
+                        System.out.println(": Guardados");
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(sinEspacios[j]);
+                        lexico_Identificador.add("Asignación");
+                    }
+                }
+                else if(sinEspacios[j].matches(asig) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Asignación: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Asignación");
                 }
-                if(sinEspacios[j].matches(Identificador) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                else if(sinEspacios[j].matches(Identificador) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Identificador: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Identificador");
                 }
+                else if(sinEspacios[j].equals(".") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                    System.out.println("Terminación: "+sinEspacios[j]);
+                    lexico_ID.add(contadorID);
+                    lexico_Linea.add(contadorLinea);
+                    lexico_Token.add(sinEspacios[j]);
+                    lexico_Identificador.add("Terminación");
+                }
+                else{
+                    System.out.println("Entró else");
+                    if(linea_conError==false) {//Evitar que ingrese varias veces la misma linea
+                        System.out.println("Error");
+                        if(!sinEspacios[j].isEmpty() && !sinEspacios[j].equals(" ") && prueba!=null && !prueba.isEmpty() && !sinEspacios[j].matches("\\s+")) {
+                            txtMensajes.appendText("Error léxico en la linea: " + contadorLinea + "\n");
+                            linea_conError=true;
+                        }
+                        //erroresGenerados.add(Integer.toString(contadorLinea));
+                    }
+                }
+                contadorID++;
             }
-
+            itemsErrores.add(Integer.toString(contadorLinea));
             contadorLinea++;
             System.out.println("Datos de la linea "+(i+1)+" : "+ prueba);
         }
@@ -439,8 +570,8 @@ public class Controller implements Initializable{
 
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
         ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
-                ,"sino","evalua","por_omision","finsel","final","finhazlo","hazlo_si","repite","finrepite","como","para"
-                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion"
+                ,"sino","evalua","por_omision","finsel","final","finsi","finhazlo","hazlo_si","repite","finrepite","como","para"
+                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de"
         );
 
         ObservableList<String> Matematicos = FXCollections.observableArrayList("+","-","/","*","**");
