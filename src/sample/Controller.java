@@ -42,7 +42,7 @@ public class Controller implements Initializable{
     private static final String[] KEYWORDS = new String[] {
             "programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
             ,"sino","evalua","por_omision","finsel","finsi","final","finhazlo","hazlo_si","repite","finrepite","como","para"
-            ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","bool","entero","largo","byte","entonces","de"
+            ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","bool","entero","largo","byte","entonces","de","libreria"
     };
 
     private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
@@ -341,15 +341,65 @@ public class Controller implements Initializable{
             */
 
 
-            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})|(?<=:)|(?=:)|(?<==)|(?==)|(?<=\")|(?=\")|(?<=])|(?=])|(?<=\\[)|(?=\\[)|(?<=[.][.])|(?=[.][.])");
+            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})|(?<=:)|(?=:)|(?<==)|(?==)|(?<=\")|(?=\")|(?<=])|(?=])|(?<=\\[)|(?=\\[)|(?<=[.][.])|(?=[.][.])|(?<=<)|(?=<)");
             juntaCadena="";
             juntaComentario_Linea="";
             numeroFlotante="";
+            String juntaLibreria="";
             boolean cadenaEncontrada=false;
             boolean comentarioLinea_Encontrado=false;
+            boolean libreriaEncontrada=false;
             for(int j=0;j<sinEspacios.length;j++){
-                System.out.println("sinEspacios: "+sinEspacios[j]);
-                if(sinEspacios[j].matches(comp) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+
+                System.out.println("sinEspacios: "+sinEspacios[j]);//DEBUG
+
+                 if(sinEspacios[j].equals("<") && comentarioLinea_Encontrado==false && cadenaEncontrada==false && comentarioBloque_Encontrado==false){
+
+                     int valor1=0, valor2=0, valor3=0, valor4=0;
+                     valor1=j+1;//nombre
+                     valor2=j+2;//.
+                     valor3=j+3;//p
+                     valor4=j+4;//>
+
+                     if(valor1<sinEspacios.length){//Nombre de libreria
+                         System.out.println("Menor");
+                        if(valor2<sinEspacios.length){//Verifico el .
+                            System.out.println("Menor");
+                            if(valor3<sinEspacios.length){//Verifico la p
+                                System.out.println("Menor");
+                                if(valor4<sinEspacios.length){//Verifico el > para cerrar
+                                    System.out.println("Menor");
+                                    if(sinEspacios[j+2].equals(".")){
+                                        if(sinEspacios[j+3].equals("p")){
+                                            if(sinEspacios[j+4].equals(">")){
+                                                juntaLibreria=sinEspacios[j]+sinEspacios[j+1]+sinEspacios[j+2]+sinEspacios[j+3]+sinEspacios[j+4];
+                                                System.out.println("Libreria: "+juntaLibreria);
+                                                lexico_ID.add(contadorID);
+                                                lexico_Linea.add(contadorLinea);
+                                                lexico_Token.add(juntaLibreria);
+                                                lexico_Identificador.add("Libreria");
+
+                                                libreriaEncontrada=true;
+
+                                                j=j+4;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    if(libreriaEncontrada==false){//Si no se encontró librería por defecto es comparador <
+                        lexico_ID.add(contadorID);
+                        lexico_Linea.add(contadorLinea);
+                        lexico_Token.add(sinEspacios[j]);
+                        lexico_Identificador.add("Comparador");
+                    }
+
+                }
+                else if(sinEspacios[j].matches(comp) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Comparador: "+sinEspacios[j]);
                     lexico_ID.add(contadorID);
                     lexico_Linea.add(contadorLinea);
