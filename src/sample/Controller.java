@@ -396,6 +396,8 @@ public class Controller implements Initializable{
                         lexico_Linea.add(contadorLinea);
                         lexico_Token.add(sinEspacios[j]);
                         lexico_Identificador.add("Comparador");
+
+                        System.out.println("Comparador: "+sinEspacios[j]);
                     }
 
                 }
