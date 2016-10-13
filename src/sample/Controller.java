@@ -229,7 +229,7 @@ public class Controller implements Initializable{
     public static List<String> erroresGenerados = new ArrayList<String>();
 
 
-
+    boolean erroresLexicos=false;
 
     public void generarLexico(){//Enviar el token y que busque en método
 
@@ -601,6 +601,7 @@ public class Controller implements Initializable{
                         if(!sinEspacios[j].isEmpty() && !sinEspacios[j].equals(" ") && prueba!=null && !prueba.isEmpty() && !sinEspacios[j].matches("\\s+")) {
                             txtMensajes.appendText("Error léxico en la linea: " + contadorLinea + "\n");
                             linea_conError=true;
+                            erroresLexicos=true;
                         }
                         //erroresGenerados.add(Integer.toString(contadorLinea));
                     }
@@ -660,5 +661,14 @@ public class Controller implements Initializable{
             System.out.println("Token: "+lexico_Token.get(i));
         for (int i=0;i<lexico_Identificador.size();i++)
             System.out.println("Identificador: "+lexico_Identificador.get(i));
+    }
+
+    public void comenzarSintactico(){
+        if(erroresLexicos==false) {
+            Sintactico sin = new Sintactico();
+            sin.detectarNodos_Arbol();
+        }
+        else
+            txtMensajes.appendText("No se puede proseguir por errores léxicos encontrados"+"\n");
     }
 }

@@ -16,7 +16,7 @@
             <Button mnemonicParsing="false" text="Guardar Rápido" onAction="#guardarRapido"/>
             <Button mnemonicParsing="false" text="Guardar como" onAction="#guardarArchivo"/>
             <Button mnemonicParsing="false" text="Léxico" onAction="#abrirLexico"/>
-            <Button mnemonicParsing="false" text="Sintáctico" />
+            <Button mnemonicParsing="false" text="Sintáctico" onAction="#comenzarSintactico"/>
             <Button mnemonicParsing="false" text="Semántico" />
             <Button mnemonicParsing="false" text="Generador" />
          </children>
