@@ -49,9 +49,17 @@ public class arbolSintactico extends JFrame{
             }
 
             int auxLibreria=0,auxVar=0,auxInicio=0;
-            boolean pri=false,sec=false,ter=false;
+            boolean pri=false,sec=false,ter=false,progPuesto=false;
 
             for(int i=0;i<sin.nombre_Nodo.size();i++){//Unir general
+
+                //Object aux =  nodos.get(i);
+
+                if(sin.programaEncontrado==true && progPuesto==false){
+                    graph.insertEdge(parent, null, "", v1, nodos.get(i));//liberia
+                    progPuesto=true;
+                }
+
                 if(sin.encontradaLibreria==true && auxLibreria<sin.hijosLibreria || pri==true && sec==false && ter==false){
                     pri=true;
                     if(auxLibreria==0) {
@@ -62,6 +70,7 @@ public class arbolSintactico extends JFrame{
                     else if(auxLibreria==1){
                         System.out.println("Hijo 2");
                         graph.insertEdge(parent, null, "", v2, nodos.get(i));//nombre
+                        auxLibreria++;
 
                     }
                 }

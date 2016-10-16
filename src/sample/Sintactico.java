@@ -22,6 +22,8 @@ public class Sintactico {
     public  static ArrayList<Integer> coordenada_X = new ArrayList<>(Arrays.asList());//Coordenada X
     public  static ArrayList<Integer> coodernada_Y = new ArrayList<>(Arrays.asList());//Coordenanda Y
 
+
+    boolean programaEncontrado=false;
     public void detectarNodos_Arbol(){
         boolean verificaLibreria=false;
         boolean errorLibreria=false;
@@ -33,6 +35,10 @@ public class Sintactico {
         boolean varCompleta=false;
         boolean inicioCompleta=false;
 
+        boolean auxLibreria=false;
+        boolean libreriaNOT=false;
+
+
 
         int hijos_Padre=0;
         int auxContador=0;
@@ -41,27 +47,41 @@ public class Sintactico {
             auxContador=0;
             auxContador=i+1;
 
+            if(ctrl.lexico_Token.get(i).equals("programa")){
+                if(auxContador<ctrl.lexico_Token.size()){
+                    if(ctrl.lexico_Token.get(i).matches("[a-zA-Z]+")){
+                        programaEncontrado=true;
+
+                        nombre_Nodo.add(ctrl.lexico_Token.get(i+1));//Agregamos la palabra reservada libreria
+                        coordenada_X.add(100);
+                        coodernada_Y.add(200);
+                        i++;
+                    }
+                }
+            }
+
             if(ctrl.lexico_Token.get(i).equals("libreria") && ctrl.lexico_Identificador.get(i).equals("Reservada") || verificaLibreria==true && libCompleta==false) {//Libreria
 
                 encontradaLibreria=true;
+                libreriaNOT=true;
                 System.out.println("Entro libreria");
 
-                cordX=300;
-                cordY=200;
-                verificaLibreria=true;
+                if(auxLibreria==false) {
+                    cordX = 170;
+                    cordY = 200;
+                    verificaLibreria = true;
 
 
+                    nombre_Nodo.add(ctrl.lexico_Token.get(i));//Agregamos la palabra reservada libreria
+                    coordenada_X.add(cordX);
+                    coodernada_Y.add(cordY);
+                    contadorNodos++;
+                    hijos_Padre++;
+                    hijosLibreria++;
 
-                nombre_Nodo.add(ctrl.lexico_Token.get(i));//Agregamos la palabra reservada libreria
-                coordenada_X.add(cordX);
-                coodernada_Y.add(cordY);
-                contadorNodos++;
-                hijos_Padre++;
-                hijosLibreria++;
-
-                if(hijos_Padre==1){
-                    cordX=cordX+80;
-                }
+                    if (hijos_Padre == 1) {
+                        cordX = cordX + 90;
+                    }
 
                 /*
                 if(ctrl.lexico_Token.get(i+1).matches("[<][A-Z][A-Za-z0-9]+[.][p][>]"))//Verificar siguiente parte
@@ -73,25 +93,40 @@ public class Sintactico {
 
                 if(errorLibreria==true)
                     break;
-                    */
+                 */
 
-                i++;
+                    i++;
 
                     nombre_Nodo.add(ctrl.lexico_Token.get(i));//Agregamos el nombre de la libreria <Hola.p>
                     coordenada_X.add(cordX);
                     coodernada_Y.add(cordY);
                     contadorNodos++;
                     hijosLibreria++;
-                if(ctrl.lexico_Token.get(i+1).equals("var")) {
-                    verificaLibreria = false;
-                    libCompleta=true;
+                    cordX=cordX+80;
+                    cordY=cordY+100;
+                }
+
+                if(auxLibreria==true) {
+                    nombre_Nodo.add(ctrl.lexico_Token.get(i));//Agregamos lo que siga
+                    coordenada_X.add(cordX);
+                    coodernada_Y.add(cordY);
+                    contadorNodos++;
+                    hijosLibreria++;
+
+                }
+                auxLibreria=true;
+                if (auxContador < ctrl.lexico_Token.size()) {
+                    if (ctrl.lexico_Token.get(i + 1).equals("var")) {
+                        verificaLibreria = false;
+                        libCompleta = true;
+                    }
                 }
 
             }
             if(errorLibreria==true)//Terminar por error
                 break;
 
-            if(ctrl.lexico_Token.get(i).equals("var") && ctrl.lexico_Identificador.get(i).equals("Reservada") || verificaVar==true && varCompleta==false && libCompleta==true) {//Var. Declaración
+            if(ctrl.lexico_Token.get(i).equals("var") && ctrl.lexico_Identificador.get(i).equals("Reservada") || verificaVar==true && varCompleta==false && libCompleta==true || libreriaNOT==false ) {//Var. Declaración
 
                 System.out.println("Entró var");
                 verificaVar=true;
@@ -103,6 +138,8 @@ public class Sintactico {
                     cordX = 450;
                     cordY = 200;
                 }
+                if(ctrl.lexico_Token.get(i).equals("var"))
+                    i++;
 
                 nombre_Nodo.add(ctrl.lexico_Token.get(i));//Agregamos los elemento de var
                 coordenada_X.add(cordX);
@@ -110,9 +147,12 @@ public class Sintactico {
                 contadorNodos++;
                 cordY=cordY+100;
                 hijosVar++;
-                if(ctrl.lexico_Token.get(i+1).equals("inicio")){
-                    verificaVar=false;
-                    varCompleta=true;
+
+                if(auxContador<ctrl.lexico_Token.size()) {
+                    if (ctrl.lexico_Token.get(i + 1).equals("inicio")) {
+                        verificaVar = false;
+                        varCompleta = true;
+                    }
                 }
             }
 
@@ -128,6 +168,9 @@ public class Sintactico {
                     cordX = 550;
                     cordY = 200;
                 }
+
+                if(ctrl.lexico_Token.get(i).equals("inicio"))
+                    i++;
 
 
                 if(auxContador<ctrl.lexico_Token.size()) {
@@ -153,6 +196,17 @@ public class Sintactico {
         System.out.println("Tamaño: "+nombre_Nodo.size());
         abrirArbol();
     }
+
+
+    public void deteccionNodos_Tokens(){
+        int listaLexico_Size=ctrl.lexico_Token.size();
+        int auxSize_Lexico=0;
+        for(int i=0;i<listaLexico_Size;i++){
+            if(ctrl.lexico_Token.get(i).equals("programa"))
+                System.out.println("");
+        }
+    }
+
 
     public void abrirArbol(){
         arbolSintactico arb = new arbolSintactico();

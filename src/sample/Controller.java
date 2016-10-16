@@ -233,6 +233,8 @@ public class Controller implements Initializable{
 
     public void generarLexico(){//Enviar el token y que busque en método
 
+        erroresLexicos=false;
+
         lexico_ID.clear();
         lexico_Linea.clear();
         lexico_Token.clear();
