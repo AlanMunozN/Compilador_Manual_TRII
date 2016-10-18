@@ -198,13 +198,301 @@ public class Sintactico {
     }
 
 
-    public void deteccionNodos_Tokens(){
+    boolean programaVerificado=false, libreriaVerificado=false, varVerificado=false, inicioVerificado=false;
+
+    public void deteccionNodos_Tokens(){//Usar banderas para que entre a un area si encuentra la palabra principal
         int listaLexico_Size=ctrl.lexico_Token.size();
         int auxSize_Lexico=0;
-        for(int i=0;i<listaLexico_Size;i++){
-            if(ctrl.lexico_Token.get(i).equals("programa"))
-                System.out.println("");
+        for(int i=0;i<listaLexico_Size;i++){//Orden de la estructura del programa
+            auxSize_Lexico=i+1;
+            //Checar banderas para evitar que ingrese donde no debe. Posible solución variación de estructura según lo que puede encontrar
+            if(ctrl.lexico_Token.get(i).equals("programa")) {
+                System.out.println("Verifica prograa");
+                if(auxSize_Lexico<listaLexico_Size){//Evitar que truene por dirección inválida por tamaño inferior
+                    seccionPrograma(ctrl.lexico_Token.get(i),ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                }
+            }
+            else if(ctrl.lexico_Token.get(i).equals("libreria")) {
+                System.out.println("Verifica libreria");
+                if(auxSize_Lexico<listaLexico_Size){//Evitar que truene por dirección inválida por tamaño inferior
+                    seccionLibreria(ctrl.lexico_Token.get(i),ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                }
+            }
+            else if(ctrl.lexico_Token.get(i).equals("var") || varVerificado==true) {
+                varVerificado=true;
+                System.out.println("Verificar var");
+
+                if (ctrl.lexico_Identificador.get(i).equals("Comentario Bloque") || ctrl.lexico_Identificador.get(i).equals("Comentario Linea")) {
+                    if(auxSize_Lexico<listaLexico_Size) {
+                        i++;
+                    }
+                }
+                System.out.println("Verificando: "+ctrl.lexico_Token.get(i));
+                if(ctrl.lexico_Token.get(i).equals("inicio")) {
+                    System.out.println("Se encontró inicio");
+                    varVerificado = false;
+                }
+                else {
+                    if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
+                        Asignacion_Var(ctrl.lexico_Token.get(i));
+                    }
+                }
+            }
+            else if(ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado==true) {//Arreglar la bandera
+                inicioVerificado=true;
+                System.out.println("Verifica inicio");
+            }
         }
+    }
+
+
+    public void seccionPrograma(String Token1, String Token2){
+        if(Token1.equals("programa")) {
+            if(Token2.matches("[A-Z][a-zA-Z0-9]+")) {
+                nombre_Nodo.add(Token1);
+                coordenada_X.add(100);
+                coodernada_Y.add(200);
+
+                nombre_Nodo.add(Token2);
+                coordenada_X.add(100);
+                coodernada_Y.add(300);
+                programaVerificado=true;
+            }
+            else {
+                System.out.println("Error en declaración de programa. Se esperaba nombre de programa");
+            }
+        }
+    }
+
+    public void seccionLibreria(String Token1, String Token2){
+        if(Token1.equals("libreria")) {
+            if(Token2.matches("[<][A-Z][a-zA-Z0-9]+[.][p][>]")) {//Si hay otra aumenta 100 en Y
+                nombre_Nodo.add(Token1);
+                coordenada_X.add(170);
+                coodernada_Y.add(200);
+
+                nombre_Nodo.add(Token2);
+                coordenada_X.add(260);
+                coodernada_Y.add(200);
+                libreriaVerificado=true;
+            }
+            else {
+                System.out.println("Error en declaración de libreria. Se esperaba nombre de libreria");
+            }
+        }
+    }
+
+    boolean ID_Encontrado=false, Asignacion_Encontrado=false, tipoDato_Encontrado=false, tipoArreglo_Encontrado=false, Separador_Encontrado=false;
+    boolean abrirArreglo_Encontrado=false, inicioArreglo_Encontrado=false, puntosArreglo_Encontrado=false, limiteArreglo_Encontrado=false, cerrarArreglo_Encontrado=false, deArreglo_Encontrado=false;
+    int auxVar=0;
+    boolean errorSintactico_Encontrado=false;
+    boolean arregloDetectado=false;
+
+    public void inicializaBanderas_Var(){
+        ID_Encontrado=false; Asignacion_Encontrado=false; tipoDato_Encontrado=false; tipoArreglo_Encontrado=false; Separador_Encontrado=false;
+        abrirArreglo_Encontrado=false; inicioArreglo_Encontrado=false; puntosArreglo_Encontrado=false; limiteArreglo_Encontrado=false; cerrarArreglo_Encontrado=false; deArreglo_Encontrado=false;
+
+        auxVar=-1;
+
+        errorSintactico_Encontrado=false; arregloDetectado=false;
+
+        System.out.println("Banderas inicializadas");
+    }
+
+    public void seccionVar(String Token){
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+        String comentarioLinea = ("[{].[}]");
+        String comentarioBloque = ("[{//].[//}]");
+
+        System.out.println("Token Var: "+Token);//Areglar la sucesión por la bandera
+        if(Token.matches(Identificador) || ID_Encontrado==true){//Declaración normal
+            ID_Encontrado=true;
+            if(Token.matches(":") || Asignacion_Encontrado==true){
+                Asignacion_Encontrado=true;
+                if(Token.matches(tipoDato) || tipoDato_Encontrado==true){
+                    tipoDato_Encontrado=true;
+                    if(Token.equals(";") || Separador_Encontrado==true){
+                        Separador_Encontrado=true;
+                        //Volvemos a inicializar las banderas
+                        inicializaBanderas_Var();
+                    }
+                    else {
+                            System.out.println("Se esperaba ;");
+                    }
+                }
+                else if(Token.equals("arreglo") || tipoArreglo_Encontrado==true){//Declaraciópn de arreglo
+                    tipoArreglo_Encontrado=true;
+                    if(Token.equals("[") || abrirArreglo_Encontrado==true){
+                        abrirArreglo_Encontrado=true;
+                        if(Token.equals("1") || inicioArreglo_Encontrado==true){
+                            inicioArreglo_Encontrado=true;
+                            if(Token.equals("..") || puntosArreglo_Encontrado==true){
+                                puntosArreglo_Encontrado=true;
+                                if(Token.matches("[0-9]+") || limiteArreglo_Encontrado==true){
+                                    limiteArreglo_Encontrado=true;
+                                    if(Token.equals("]") || cerrarArreglo_Encontrado==true){
+                                        cerrarArreglo_Encontrado=true;
+                                        if(Token.equals("de") ||deArreglo_Encontrado==true){
+                                            deArreglo_Encontrado=true;
+                                            if(Token.matches(tipoDato) || tipoDato_Encontrado==true){
+                                                tipoDato_Encontrado=true;
+                                                if (Token.equals(";") || Separador_Encontrado==true){
+                                                    Separador_Encontrado=true;
+                                                    //Volvemos a inicializar las banderas
+                                                    inicializaBanderas_Var();
+                                                }
+                                                else {
+                                                        System.out.println("Se esperaba ;");
+                                                }
+                                            }
+                                            else {
+                                                    System.out.println("Se esperaba tipo de dato para el arreglo");
+                                            }
+                                        }
+                                        else {
+                                                System.out.println("Se esperaba declarion de tipo de arreglo de");
+                                        }
+                                    }
+                                    else {
+                                            System.out.println("Se esperaba cerrado de arreglo ]");
+                                    }
+                                }
+                                else {
+                                        System.out.println("Se esperaba límite de arreglo (Número)");
+                                }
+                            }
+                            else {
+                                    System.out.println("Se esperaba .. de arreglo");
+                            }
+                        }
+                        else {
+                                System.out.println("Se esperaba comienzo de arreglo 1");
+                        }
+                    }
+                    else {
+
+                            System.out.println("Se esperaba apertura de arreglo [");
+                    }
+                }
+                else {
+
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+            }
+            else {
+                    System.out.println("Se esperaba :");
+            }
+        }
+        else if(Token.matches(comentarioLinea)){
+            System.out.println("");
+            inicializaBanderas_Var();
+        }
+        else if(Token.matches(comentarioBloque)){
+            System.out.println("");
+            inicializaBanderas_Var();
+        }
+        auxVar=auxVar+1;
+    }
+
+
+
+    public void Asignacion_Var(String Token){
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+
+        System.out.println("auxVar = "+auxVar);
+
+        if(auxVar==0){
+            if(Token.matches(Identificador)) {
+                System.out.println("Identificador correcto");
+            }
+        }
+        if(auxVar==1){
+            if(Token.equals(":")){
+                System.out.println("Asignación correcto");
+            }
+            else
+                System.out.println("Se esperaba :");
+        }
+        if(auxVar==2){
+            if(Token.matches(tipoDato)){
+                System.out.println("Tipo de dato correcto");
+            }
+            else if(Token.equals("arreglo")){
+                System.out.println("Tipo de dato arreglo correcto");
+                arregloDetectado=true;
+            }
+            else
+                System.out.println("Se esperaba tipo de dato");
+        }
+        if(auxVar==3 && arregloDetectado==false){//Será para declaración normal
+            if(Token.equals(";")){
+                System.out.println("Separador correcto");
+                inicializaBanderas_Var();
+            }
+            else
+                System.out.println("Se esperaba ;");
+        }
+        if(auxVar==3 && arregloDetectado==true){//Arreglo detectado
+            if(Token.equals("[")){
+                System.out.println("Apertura de arreglo correcto");
+            }
+            else
+                System.out.println("Se esperaba [");
+        }
+        if(auxVar==4 && arregloDetectado==true){
+            if(Token.equals("1")){
+                System.out.println("Inicio de arreglo correcto");
+            }
+            else
+                System.out.println("Se esperaba inicio de arreglo 1");
+        }
+        if(auxVar==5 && arregloDetectado==true){
+            if(Token.equals("..")){
+                System.out.println(".. correcto");
+            }
+            else
+                System.out.println("Se esperaba .. de arreglo ");
+        }
+        if(auxVar==6 && arregloDetectado==true){
+            if(Token.matches("[0-9]+")){
+                System.out.println("Límite de arreglo correcto");
+            }
+            else
+                System.out.println("Se esperaba límite de arreglo");
+        }
+        if(auxVar==7 && arregloDetectado==true){
+            if(Token.equals("]")){
+                System.out.println("Cierre de arreglo correcto");
+            }
+            else
+                System.out.println("Se esperaba ]");
+        }
+        if(auxVar==8 && arregloDetectado==true){
+            if(Token.equals("de")){
+                System.out.println("de correcto");
+            }
+            else
+                System.out.println("Se esperaba de");
+        }
+        if(auxVar==9 && arregloDetectado==true){
+            if(Token.matches(tipoDato)){
+                System.out.println("Tipo de arreglo correcto");
+            }
+            else
+                System.out.println("Se esperaba tipo de dato de arreglo");
+        }
+        if(auxVar==10 && arregloDetectado==true){
+            if(Token.equals(";")){
+                System.out.println("Separador correcto");
+                inicializaBanderas_Var();
+            }
+            else
+                System.out.println("Se esperaba ;");
+        }
+
+        auxVar=auxVar+1;
     }
 
 
