@@ -232,7 +232,16 @@ public class Sintactico {
                 }
                 System.out.println("Verificando: "+ctrl.lexico_Token.get(i));
 
-                    if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
+                if(auxSize_Lexico<listaLexico_Size){
+                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")){
+                        asignacionInicio = true;
+                    }
+                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
+                        invocacionInicio = true;
+                    }
+                }
+
+                if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
                         Asignacion_Var(ctrl.lexico_Token.get(i));
                         //Si detecta funcion o procedimiento entra a esa sección para verificar
 
@@ -742,11 +751,76 @@ public class Sintactico {
         auxVar=auxVar+1;
     }
 
+    boolean asignacionInicio=false;
+    boolean invocacionInicio=false;
+
     public void secciónInicio(String Token){
         /*
         <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
             | escribir | <comentarios>
          */
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+
+        if(asignacionInicio==true) {//La bandera cambiar por que en el for verifico el token siguiente y si es := se activa la bandera
+            if (auxVar == 0) {//Asignación
+                if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("Identificador correcto");
+                } else
+                    System.out.println("Se esperaba identificador");
+            }
+            if (auxVar == 1) {
+                if (Token.equals(":=")) {
+                    System.out.println("Asignación correcto");
+                } else
+                    System.out.println("Se esperaba asignación :=");
+            }
+            if (auxVar == 2) {
+                if (Token.matches(tipoDato)) {
+                    System.out.println("Tipo de dato correcto");
+                } else
+                    System.out.println("Se esperaba tipo de dato");
+            }
+            if(auxVar == 3){
+                if(Token.equals(";")){
+                    System.out.println("Separado correcto");
+                    asignacionInicio = false;
+                }
+                else
+                    System.out.println("Se esperada separador ;");
+            }
+        }
+
+        if(invocacionInicio==true) {
+            if (auxVar == 0) {//Invocar procedimiento o funcion
+                if (Token.matches(Identificador)) {
+                    System.out.println("Identificador correcto");
+                } else
+                    System.out.println("Se esperaba identificador");
+            }
+            if (auxVar == 1) {
+                if (Token.equals("(")) {
+                    System.out.println("Parentesis de apertura correcto");
+                } else
+                    System.out.println("Se esperaba (");
+            }
+            if (auxVar == 2) {
+                if (Token.equals(")")) {
+                    System.out.println("Parentesis de cerrado correcto");
+                } else
+                    System.out.println("Se esperaba )");
+            }
+            if (auxVar == 3) {
+                if(Token.equals(";")){
+                    System.out.println("Separado correcto");
+                    invocacionInicio = false;
+                }
+                else
+                    System.out.println("Se esperada separador ;");
+            }
+        }
+
+        auxVar=auxVar+1;
     }
 
 
