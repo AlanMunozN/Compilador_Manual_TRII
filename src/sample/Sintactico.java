@@ -220,6 +220,9 @@ public class Sintactico {
             }
             else if(ctrl.lexico_Token.get(i).equals("var") || varVerificado==true) {
                 varVerificado=true;
+                if(ctrl.lexico_Token.get(i).equals("var"))
+                    inicializaBanderas_Var();
+
                 System.out.println("Verificar var");
 
                 if (ctrl.lexico_Identificador.get(i).equals("Comentario Bloque") || ctrl.lexico_Identificador.get(i).equals("Comentario Linea")) {
@@ -228,19 +231,22 @@ public class Sintactico {
                     }
                 }
                 System.out.println("Verificando: "+ctrl.lexico_Token.get(i));
-                if(ctrl.lexico_Token.get(i).equals("inicio")) {
-                    System.out.println("Se encontró inicio");
-                    varVerificado = false;
-                }
-                else {
+
                     if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
                         Asignacion_Var(ctrl.lexico_Token.get(i));
+                        //Si detecta funcion o procedimiento entra a esa sección para verificar
+
+                        if(ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
+                            System.out.println("Se encontró inicio");
+                            varVerificado = false;
+                        }
                     }
-                }
+
             }
             else if(ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado==true) {//Arreglar la bandera
                 inicioVerificado=true;
                 System.out.println("Verifica inicio");
+                //Contiene un bloque. El cual es génerico
             }
         }
     }
@@ -287,6 +293,15 @@ public class Sintactico {
     int auxVar=0;
     boolean errorSintactico_Encontrado=false;
     boolean arregloDetectado=false;
+    boolean funcionDetectado=false; // Ver como se inicializa
+    boolean procedimientoDetectado=false; // Ver como se inicializa
+    boolean funcion_sinParametros=false;
+    boolean funcion_parametroEncontrado=false;
+    boolean funcion_unParametro=false;
+    boolean funcion_dosParametros=false;
+
+    boolean procedimiento_unParametro=false;
+    boolean procedimiento_dosParametro=false;
 
     public void inicializaBanderas_Var(){
         ID_Encontrado=false; Asignacion_Encontrado=false; tipoDato_Encontrado=false; tipoArreglo_Encontrado=false; Separador_Encontrado=false;
@@ -295,6 +310,10 @@ public class Sintactico {
         auxVar=-1;
 
         errorSintactico_Encontrado=false; arregloDetectado=false;
+
+        funcion_sinParametros=false; funcion_parametroEncontrado=false; funcion_unParametro=false; funcion_dosParametros=false;
+
+        procedimiento_unParametro=false; procedimiento_dosParametro=false;
 
         System.out.println("Banderas inicializadas");
     }
@@ -407,15 +426,23 @@ public class Sintactico {
             if(Token.matches(Identificador)) {
                 System.out.println("Identificador correcto");
             }
+            else if(Token.equals("funcion")) {
+                System.out.println("función correcto. Identificado");
+                funcionDetectado=true;
+            }
+            else if(Token.equals("procedimiento")) {
+                System.out.println("procedimiento correcto. Identificado");
+                procedimientoDetectado=true;
+            }
         }
-        if(auxVar==1){
+        if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
             if(Token.equals(":")){
                 System.out.println("Asignación correcto");
             }
             else
                 System.out.println("Se esperaba :");
         }
-        if(auxVar==2){
+        if(auxVar==2 && funcionDetectado==false && procedimientoDetectado==false){
             if(Token.matches(tipoDato)){
                 System.out.println("Tipo de dato correcto");
             }
@@ -426,7 +453,7 @@ public class Sintactico {
             else
                 System.out.println("Se esperaba tipo de dato");
         }
-        if(auxVar==3 && arregloDetectado==false){//Será para declaración normal
+        if(auxVar==3 && arregloDetectado==false && funcionDetectado==false && procedimientoDetectado==false){//Será para declaración normal
             if(Token.equals(";")){
                 System.out.println("Separador correcto");
                 inicializaBanderas_Var();
@@ -492,7 +519,234 @@ public class Sintactico {
                 System.out.println("Se esperaba ;");
         }
 
+
+        //Función
+        //funcion <identificador> ([ <tipodato> <identificador> [, <tipodato> <identificador>] ]) como <tipodato>
+        // funcion Funcion ( entero Numero , string Cadena ) como flotante
+        if(funcionDetectado==true) {//Solo entra si se detectó una función el auxVar==0
+            if (auxVar == 1) {
+                if (Token.matches(Identificador)) {
+                    System.out.println("Identificador correcto");
+                }
+                else
+                    System.out.println("Se esperaba un identificador");
+            }
+            if(auxVar==2){
+                if (Token.equals("(")) {
+                    System.out.println("Apertura correcto");
+                }
+                else
+                    System.out.println("Se esperaba un (");
+            }
+            if(auxVar==3){
+                if (Token.equals(")")) {//Sin parametros
+                    System.out.println("Cerrado correcto");
+                    funcion_sinParametros=true;
+                }
+                else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
+                    System.out.println("Tipo de dato correcto");
+                    funcion_parametroEncontrado=true;
+                }
+                else
+                    System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
+            }
+
+
+            if(funcion_sinParametros==true){//No se encontraon parametros
+                if(auxVar==4){
+                    if (Token.equals("como")) {
+                        System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                }
+                if(auxVar==5){
+                    if (Token.matches(tipoDato)) {
+                        System.out.println("Tipo de dato correcto");
+                        inicializaBanderas_Var();
+                    }
+                    else
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+            }
+
+
+            if(funcion_parametroEncontrado==true){//Se encontró parametro
+                if(auxVar==4){
+                    if (Token.matches(Identificador)) {
+                        System.out.println("Identificador correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un identificador");
+                }
+                if(auxVar==5){
+                    if (Token.equals(")")) {
+                        System.out.println("Parentesis de cerrado correcto");
+                        funcion_unParametro=true;//Se procede a verificar el fin
+                        funcion_parametroEncontrado=false;
+                    }
+                    if (Token.equals(",")) {
+                        System.out.println("Coma de segundo parametro correcto");
+                        funcion_dosParametros=true;//Se procede a verificar el otro parametro
+                        funcion_parametroEncontrado=false;
+                    }
+                    else
+                        System.out.println("Se esperaba una coma o  paréntesis de cerrado");
+                }
+            }
+
+
+            if(funcion_unParametro==true){//Se encontró un parametro
+                if(auxVar==6){
+                    if (Token.equals("como")) {
+                        System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                }
+                if(auxVar==7){
+                    if (Token.matches(tipoDato)) {
+                        System.out.println("Tipo de dato correcto");
+                        inicializaBanderas_Var();
+                    }
+                    else
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+            }
+
+
+            if(funcion_dosParametros==true){//Se encontró otro parámetro. Fueorn dobles
+                if(auxVar==6){
+                    if (Token.matches(tipoDato)) {
+                        System.out.println("Tipo de dato correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+                if(auxVar==7){
+                    if (Token.matches(Identificador)) {
+                        System.out.println("Identificador correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un identificador");
+                }
+                if(auxVar==8){
+                    if (Token.equals(")")) {
+                        System.out.println("Parentesis de cerrado correcto");
+                    }
+                    else
+                        System.out.println("Se esparaba parentesis de cerrado )");
+                }
+                if(auxVar==9){
+                    if (Token.equals("como")) {
+                        System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                }
+                if(auxVar==10){
+                    if (Token.matches(tipoDato)) {
+                        System.out.println("Tipo de dato correcto");
+                        inicializaBanderas_Var();
+                    }
+                    else
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+            }
+
+        }
+
+
+
+
+        //procedimiento Algo (entero Rand, string Cadena)
+        if(procedimientoDetectado==true){//Solo entra si se detectó un procedimiento el auxVar==0
+            if (auxVar == 1) {
+                if (Token.matches(Identificador)) {
+                    System.out.println("Identificador correcto");
+                }
+                else
+                    System.out.println("Se esperaba un identificador");
+            }
+            if(auxVar==2){
+                if (Token.equals("(")) {
+                    System.out.println("Apertura correcto");
+                }
+                else
+                    System.out.println("Se esperaba un (");
+            }
+            if(auxVar==3){
+                if (Token.equals(")")) {//Sin parametros
+                    System.out.println("Cerrado correcto");
+                    inicializaBanderas_Var();
+                }
+                else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
+                    System.out.println("Tipo de dato correcto");
+                    procedimiento_unParametro=true;
+                }
+                else
+                    System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
+            }
+
+            if(procedimiento_unParametro==true){
+                if (auxVar == 4) {
+                    if (Token.matches(Identificador)) {
+                        System.out.println("Identificador correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un identificador");
+                }
+                if(auxVar==5){
+                    if (Token.equals(")")) {
+                        System.out.println("Parentesis de cerrado correcto");
+                        inicializaBanderas_Var();
+                    }
+                    if (Token.equals(",")) {
+                        System.out.println("Coma de segundo parametro correcto");
+                        procedimiento_dosParametro=true;//Se procede a verificar el otro parametro
+                        procedimiento_unParametro=false;
+                    }
+                    else
+                        System.out.println("Se esperaba una coma o  paréntesis de cerrado");
+                }
+            }
+
+
+            if(procedimiento_dosParametro==true){
+                if(auxVar==6){
+                    if (Token.matches(tipoDato)) {
+                        System.out.println("Tipo de dato correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un tipo de dato");
+                }
+                if(auxVar==7){
+                    if (Token.matches(Identificador)) {
+                        System.out.println("Identificador correcto");
+                    }
+                    else
+                        System.out.println("Se esperaba un identificador");
+                }
+                if(auxVar==8){
+                    if (Token.equals(")")) {
+                        System.out.println("Parentesis de cerrado correcto");
+                        inicializaBanderas_Var();
+                    }
+                    else
+                        System.out.println("Se esparaba parentesis de cerrado )");
+                }
+            }
+
+        }
+
         auxVar=auxVar+1;
+    }
+
+    public void secciónInicio(String Token){
+        /*
+        <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
+            | escribir | <comentarios>
+         */
     }
 
 
