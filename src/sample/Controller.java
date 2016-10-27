@@ -343,7 +343,7 @@ public class Controller implements Initializable{
             */
 
 
-            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})|(?<=:)|(?=:)|(?<==)|(?==)|(?<=\")|(?=\")|(?<=])|(?=])|(?<=\\[)|(?=\\[)|(?<=[.][.])|(?=[.][.])|(?<=<)|(?=<)");
+            String[] sinEspacios = prueba.split("(\\b)|(?<=;)|(?=;)|(?<=//})|(?=//})|(?<=:)|(?=:)|(?<==)|(?==)|(?<=\")|(?=\")|(?<=])|(?=])|(?<=\\[)|(?=\\[)|(?<=[.][.])|(?=[.][.])|(?<=<)|(?=<)|(?<=\\()|(?=\\()|(?<=\\))|(?=\\))|(?<=,)|(?=,)");
             juntaCadena="";
             juntaComentario_Linea="";
             numeroFlotante="";
@@ -589,6 +589,27 @@ public class Controller implements Initializable{
                     lexico_Token.add(sinEspacios[j]);
                     lexico_Identificador.add("Identificador");
                 }
+                 else if(sinEspacios[j].equals("(") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Agrupación: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Identificador.add("Agrupación");
+                 }
+                 else if(sinEspacios[j].equals(")") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Agrupación: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Identificador.add("Agrupación");
+                 }
+                 else if(sinEspacios[j].equals(",") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Separador parametros: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Identificador.add("Separador parametros");
+                 }
                 else if(sinEspacios[j].equals(".") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Terminación: "+sinEspacios[j]);
                     lexico_ID.add(contadorID);

@@ -220,8 +220,10 @@ public class Sintactico {
             }
             else if(ctrl.lexico_Token.get(i).equals("var") || varVerificado==true) {
                 varVerificado=true;
-                if(ctrl.lexico_Token.get(i).equals("var"))
+                if(ctrl.lexico_Token.get(i).equals("var")) {
                     inicializaBanderas_Var();
+                    auxVar=0;
+                }
 
                 System.out.println("Verificar var");
 
@@ -232,14 +234,7 @@ public class Sintactico {
                 }
                 System.out.println("Verificando: "+ctrl.lexico_Token.get(i));
 
-                if(auxSize_Lexico<listaLexico_Size){
-                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")){
-                        asignacionInicio = true;
-                    }
-                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
-                        invocacionInicio = true;
-                    }
-                }
+
 
                 if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
                         Asignacion_Var(ctrl.lexico_Token.get(i));
@@ -248,6 +243,7 @@ public class Sintactico {
                         if(ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
                             System.out.println("Se encontró inicio");
                             varVerificado = false;
+                            i--;
                         }
                     }
 
@@ -255,6 +251,32 @@ public class Sintactico {
             else if(ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado==true) {//Arreglar la bandera
                 inicioVerificado=true;
                 System.out.println("Verifica inicio");
+                if(ctrl.lexico_Token.get(i).equals("inicio")) {
+                    inicializaBanderas_Var();
+                    auxVar=0;
+                }
+                if(!ctrl.lexico_Token.get(i).equals("inicio")) {
+                    if(auxSize_Lexico<listaLexico_Size){
+                        if(ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")){
+                            asignacionInicio = true;
+                            System.out.println("Va asignación");
+                        }
+                        if(ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
+                            invocacionInicio = true;
+                            System.out.println("Va invocación");
+                        }
+                    }
+                    System.out.println("Verificando en inicio: "+ctrl.lexico_Token.get(i));
+                    //Agregar de minetras sea difrente a inicio como en la parte de var
+                    secciónInicio(ctrl.lexico_Token.get(i));
+                }
+                if(auxSize_Lexico<listaLexico_Size && auxSize_Lexico+1<listaLexico_Size){
+                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals("fin")){
+                        if(ctrl.lexico_Token.get(auxSize_Lexico+1).equals(".")){
+                            System.out.println("Fin detectado");
+                        }
+                    }
+                }
                 //Contiene un bloque. El cual es génerico
             }
         }
@@ -424,7 +446,8 @@ public class Sintactico {
     }
 
 
-
+    boolean esperaFin_Proc=false;
+    boolean esperaFin_Func=false;
     public void Asignacion_Var(String Token){
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
@@ -573,6 +596,7 @@ public class Sintactico {
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
                         inicializaBanderas_Var();
+                        funcionDetectado=false;
                     }
                     else
                         System.out.println("Se esperaba un tipo de dato");
@@ -617,6 +641,7 @@ public class Sintactico {
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
                         inicializaBanderas_Var();
+                        funcionDetectado=false;
                     }
                     else
                         System.out.println("Se esperaba un tipo de dato");
@@ -657,6 +682,7 @@ public class Sintactico {
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
                         inicializaBanderas_Var();
+                        funcionDetectado=false;
                     }
                     else
                         System.out.println("Se esperaba un tipo de dato");
@@ -688,6 +714,7 @@ public class Sintactico {
                 if (Token.equals(")")) {//Sin parametros
                     System.out.println("Cerrado correcto");
                     inicializaBanderas_Var();
+                    procedimientoDetectado=false;
                 }
                 else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
                     System.out.println("Tipo de dato correcto");
@@ -709,6 +736,7 @@ public class Sintactico {
                     if (Token.equals(")")) {
                         System.out.println("Parentesis de cerrado correcto");
                         inicializaBanderas_Var();
+                        procedimientoDetectado=false;
                     }
                     if (Token.equals(",")) {
                         System.out.println("Coma de segundo parametro correcto");
@@ -740,6 +768,7 @@ public class Sintactico {
                     if (Token.equals(")")) {
                         System.out.println("Parentesis de cerrado correcto");
                         inicializaBanderas_Var();
+                        procedimientoDetectado=false;
                     }
                     else
                         System.out.println("Se esparaba parentesis de cerrado )");
@@ -762,6 +791,8 @@ public class Sintactico {
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
 
+        System.out.println("auxVar - Inicio: "+auxVar);
+
         if(asignacionInicio==true) {//La bandera cambiar por que en el for verifico el token siguiente y si es := se activa la bandera
             if (auxVar == 0) {//Asignación
                 if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
@@ -776,7 +807,7 @@ public class Sintactico {
                     System.out.println("Se esperaba asignación :=");
             }
             if (auxVar == 2) {
-                if (Token.matches(tipoDato)) {
+                if (Token.matches("[0-9]+")) {
                     System.out.println("Tipo de dato correcto");
                 } else
                     System.out.println("Se esperaba tipo de dato");
@@ -785,16 +816,17 @@ public class Sintactico {
                 if(Token.equals(";")){
                     System.out.println("Separado correcto");
                     asignacionInicio = false;
+                    inicializaBanderas_Var();
                 }
                 else
                     System.out.println("Se esperada separador ;");
             }
         }
 
-        if(invocacionInicio==true) {
+        if(invocacionInicio==true) {//Los paréntesis pueden ser tomados como el conjunto en léxico y solo se verifica con un match
             if (auxVar == 0) {//Invocar procedimiento o funcion
                 if (Token.matches(Identificador)) {
-                    System.out.println("Identificador correcto");
+                    System.out.println("Identificador correcto. Función");
                 } else
                     System.out.println("Se esperaba identificador");
             }
@@ -814,6 +846,7 @@ public class Sintactico {
                 if(Token.equals(";")){
                     System.out.println("Separado correcto");
                     invocacionInicio = false;
+                    inicializaBanderas_Var();
                 }
                 else
                     System.out.println("Se esperada separador ;");
