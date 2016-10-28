@@ -199,88 +199,133 @@ public class Sintactico {
 
 
     boolean programaVerificado=false, libreriaVerificado=false, varVerificado=false, inicioVerificado=false;
+    boolean inicializaCoordenada_Y_VAR=false;
+    boolean inicializaCoordenada_Y_INICIO=false;
 
-    public void deteccionNodos_Tokens(){//Usar banderas para que entre a un area si encuentra la palabra principal
-        int listaLexico_Size=ctrl.lexico_Token.size();
-        int auxSize_Lexico=0;
-        for(int i=0;i<listaLexico_Size;i++){//Orden de la estructura del programa
-            auxSize_Lexico=i+1;
+    public void deteccionNodos_Tokens() {//Usar banderas para que entre a un area si encuentra la palabra principal
+        int listaLexico_Size = ctrl.lexico_Token.size();
+        int auxSize_Lexico = 0;
+        for (int i = 0; i < listaLexico_Size; i++) {//Orden de la estructura del programa
+            auxSize_Lexico = i + 1;
+
+            System.out.println("Token actual: "+ctrl.lexico_Token.get(i));
+
             //Checar banderas para evitar que ingrese donde no debe. Posible solución variación de estructura según lo que puede encontrar
-            if(ctrl.lexico_Token.get(i).equals("programa")) {
+            if (ctrl.lexico_Token.get(i).equals("programa")) {
                 System.out.println("Verifica prograa");
-                if(auxSize_Lexico<listaLexico_Size){//Evitar que truene por dirección inválida por tamaño inferior
-                    seccionPrograma(ctrl.lexico_Token.get(i),ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                if (auxSize_Lexico < listaLexico_Size) {//Evitar que truene por dirección inválida por tamaño inferior
+                    seccionPrograma(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
                 }
-            }
-            else if(ctrl.lexico_Token.get(i).equals("libreria")) {
+            } else if (ctrl.lexico_Token.get(i).equals("libreria")) {
                 System.out.println("Verifica libreria");
-                if(auxSize_Lexico<listaLexico_Size){//Evitar que truene por dirección inválida por tamaño inferior
-                    seccionLibreria(ctrl.lexico_Token.get(i),ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                if (auxSize_Lexico < listaLexico_Size) {//Evitar que truene por dirección inválida por tamaño inferior
+                    seccionLibreria(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
                 }
-            }
-            else if(ctrl.lexico_Token.get(i).equals("var") || varVerificado==true) {
-                varVerificado=true;
-                if(ctrl.lexico_Token.get(i).equals("var")) {
+            } else if (ctrl.lexico_Token.get(i).equals("var") || varVerificado == true) {
+                varVerificado = true;
+                if (ctrl.lexico_Token.get(i).equals("var")) {
                     inicializaBanderas_Var();
-                    auxVar=0;
+                    auxVar = 0;
                 }
 
                 System.out.println("Verificar var");
 
                 if (ctrl.lexico_Identificador.get(i).equals("Comentario Bloque") || ctrl.lexico_Identificador.get(i).equals("Comentario Linea")) {
-                    if(auxSize_Lexico<listaLexico_Size) {
+                    if (auxSize_Lexico < listaLexico_Size) {
                         i++;
                     }
                 }
-                System.out.println("Verificando: "+ctrl.lexico_Token.get(i));
+                System.out.println("Verificando: " + ctrl.lexico_Token.get(i));
 
 
+                if (!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
 
-                if(!ctrl.lexico_Token.get(i).equals("var")) {//Ver en la lista de identificador si es comentario i++
+                    if (inicializaCoordenada_Y_VAR == false)
+                        cordY = 200;
+                    inicializaCoordenada_Y_VAR = true;
+
+                    if (auxSize_Lexico < listaLexico_Size) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals(":")) {
+                            nombre_Nodo.add("<Asignación>");
+                            coordenada_X.add(450);
+                            coodernada_Y.add(cordY);
+                            cordY = cordY + 100;
+                        }
+
                         Asignacion_Var(ctrl.lexico_Token.get(i));
                         //Si detecta funcion o procedimiento entra a esa sección para verificar
 
-                        if(ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
+                        if (ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
                             System.out.println("Se encontró inicio");
                             varVerificado = false;
                             i--;
                         }
                     }
+                }
+                } else if (ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado == true) {//Arreglar la bandera
+                    inicioVerificado = true;
+                    System.out.println("Verifica inicio");
 
-            }
-            else if(ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado==true) {//Arreglar la bandera
-                inicioVerificado=true;
-                System.out.println("Verifica inicio");
-                if(ctrl.lexico_Token.get(i).equals("inicio")) {
-                    inicializaBanderas_Var();
-                    auxVar=0;
-                }
-                if(!ctrl.lexico_Token.get(i).equals("inicio")) {
-                    if(auxSize_Lexico<listaLexico_Size){
-                        if(ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")){
-                            asignacionInicio = true;
-                            System.out.println("Va asignación");
-                        }
-                        if(ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
-                            invocacionInicio = true;
-                            System.out.println("Va invocación");
+                    if (inicializaCoordenada_Y_INICIO == false)
+                        cordY = 200;
+                    inicializaCoordenada_Y_INICIO = true;
+
+                    if (ctrl.lexico_Identificador.get(i).equals("Comentario Bloque") || ctrl.lexico_Identificador.get(i).equals("Comentario Linea")) {
+                        if (auxSize_Lexico < listaLexico_Size) {
+                            i++;
                         }
                     }
-                    System.out.println("Verificando en inicio: "+ctrl.lexico_Token.get(i));
-                    //Agregar de minetras sea difrente a inicio como en la parte de var
-                    secciónInicio(ctrl.lexico_Token.get(i));
-                }
-                if(auxSize_Lexico<listaLexico_Size && auxSize_Lexico+1<listaLexico_Size){
-                    if(ctrl.lexico_Token.get(auxSize_Lexico).equals("fin")){
-                        if(ctrl.lexico_Token.get(auxSize_Lexico+1).equals(".")){
-                            System.out.println("Fin detectado");
+
+                    if (ctrl.lexico_Token.get(i).equals("inicio")) {
+                        inicializaBanderas_Var();
+                        auxVar = 0;
+                    }
+                    if (!ctrl.lexico_Token.get(i).equals("inicio")) {
+                        if (auxSize_Lexico < listaLexico_Size) {
+                            if (ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")) {
+                                asignacionInicio = true;
+                                System.out.println("Va asignación");
+                                nombre_Nodo.add("<Asignación>");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                            }
+                            if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
+                                invocacionInicio = true;
+                                System.out.println("Va invocación");
+                                nombre_Nodo.add("<Invocación>");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                            }
+                        }
+                        System.out.println("Verificando en inicio: " + ctrl.lexico_Token.get(i));
+                        //Agregar de minetras sea difrente a inicio como en la parte de var
+                        secciónInicio(ctrl.lexico_Token.get(i));
+                    }
+                    if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("fin")) {
+                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(".")) {
+                                System.out.println("Fin detectado");
+                                nombre_Nodo.add("fin");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+
+                                nombre_Nodo.add(".");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                                abrirArbol();
+                            }
                         }
                     }
+                    //Contiene un bloque. El cual es génerico
                 }
-                //Contiene un bloque. El cual es génerico
             }
         }
-    }
+
+
 
 
     public void seccionPrograma(String Token1, String Token2){
@@ -448,6 +493,7 @@ public class Sintactico {
 
     boolean esperaFin_Proc=false;
     boolean esperaFin_Func=false;
+
     public void Asignacion_Var(String Token){
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
@@ -457,19 +503,36 @@ public class Sintactico {
         if(auxVar==0){
             if(Token.matches(Identificador)) {
                 System.out.println("Identificador correcto");
+                //cordY=200;
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else if(Token.equals("funcion")) {
                 System.out.println("función correcto. Identificado");
                 funcionDetectado=true;
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else if(Token.equals("procedimiento")) {
                 System.out.println("procedimiento correcto. Identificado");
                 procedimientoDetectado=true;
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
         }
         if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
             if(Token.equals(":")){
                 System.out.println("Asignación correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba :");
@@ -477,10 +540,18 @@ public class Sintactico {
         if(auxVar==2 && funcionDetectado==false && procedimientoDetectado==false){
             if(Token.matches(tipoDato)){
                 System.out.println("Tipo de dato correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else if(Token.equals("arreglo")){
                 System.out.println("Tipo de dato arreglo correcto");
                 arregloDetectado=true;
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba tipo de dato");
@@ -488,6 +559,10 @@ public class Sintactico {
         if(auxVar==3 && arregloDetectado==false && funcionDetectado==false && procedimientoDetectado==false){//Será para declaración normal
             if(Token.equals(";")){
                 System.out.println("Separador correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
                 inicializaBanderas_Var();
             }
             else
@@ -496,6 +571,10 @@ public class Sintactico {
         if(auxVar==3 && arregloDetectado==true){//Arreglo detectado
             if(Token.equals("[")){
                 System.out.println("Apertura de arreglo correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba [");
@@ -503,6 +582,10 @@ public class Sintactico {
         if(auxVar==4 && arregloDetectado==true){
             if(Token.equals("1")){
                 System.out.println("Inicio de arreglo correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba inicio de arreglo 1");
@@ -510,6 +593,10 @@ public class Sintactico {
         if(auxVar==5 && arregloDetectado==true){
             if(Token.equals("..")){
                 System.out.println(".. correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba .. de arreglo ");
@@ -517,6 +604,10 @@ public class Sintactico {
         if(auxVar==6 && arregloDetectado==true){
             if(Token.matches("[0-9]+")){
                 System.out.println("Límite de arreglo correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba límite de arreglo");
@@ -524,6 +615,10 @@ public class Sintactico {
         if(auxVar==7 && arregloDetectado==true){
             if(Token.equals("]")){
                 System.out.println("Cierre de arreglo correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba ]");
@@ -531,6 +626,10 @@ public class Sintactico {
         if(auxVar==8 && arregloDetectado==true){
             if(Token.equals("de")){
                 System.out.println("de correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba de");
@@ -538,6 +637,10 @@ public class Sintactico {
         if(auxVar==9 && arregloDetectado==true){
             if(Token.matches(tipoDato)){
                 System.out.println("Tipo de arreglo correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
             }
             else
                 System.out.println("Se esperaba tipo de dato de arreglo");
@@ -545,6 +648,10 @@ public class Sintactico {
         if(auxVar==10 && arregloDetectado==true){
             if(Token.equals(";")){
                 System.out.println("Separador correcto");
+                nombre_Nodo.add(Token);
+                coordenada_X.add(450);
+                coodernada_Y.add(cordY);
+                cordY=cordY+100;
                 inicializaBanderas_Var();
             }
             else
@@ -559,6 +666,10 @@ public class Sintactico {
             if (auxVar == 1) {
                 if (Token.matches(Identificador)) {
                     System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un identificador");
@@ -566,6 +677,10 @@ public class Sintactico {
             if(auxVar==2){
                 if (Token.equals("(")) {
                     System.out.println("Apertura correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un (");
@@ -574,10 +689,18 @@ public class Sintactico {
                 if (Token.equals(")")) {//Sin parametros
                     System.out.println("Cerrado correcto");
                     funcion_sinParametros=true;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
                     System.out.println("Tipo de dato correcto");
                     funcion_parametroEncontrado=true;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
@@ -588,6 +711,10 @@ public class Sintactico {
                 if(auxVar==4){
                     if (Token.equals("como")) {
                         System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
@@ -595,6 +722,10 @@ public class Sintactico {
                 if(auxVar==5){
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
@@ -608,6 +739,10 @@ public class Sintactico {
                 if(auxVar==4){
                     if (Token.matches(Identificador)) {
                         System.out.println("Identificador correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un identificador");
@@ -617,11 +752,19 @@ public class Sintactico {
                         System.out.println("Parentesis de cerrado correcto");
                         funcion_unParametro=true;//Se procede a verificar el fin
                         funcion_parametroEncontrado=false;
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     if (Token.equals(",")) {
                         System.out.println("Coma de segundo parametro correcto");
                         funcion_dosParametros=true;//Se procede a verificar el otro parametro
                         funcion_parametroEncontrado=false;
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
@@ -633,6 +776,10 @@ public class Sintactico {
                 if(auxVar==6){
                     if (Token.equals("como")) {
                         System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
@@ -640,6 +787,10 @@ public class Sintactico {
                 if(auxVar==7){
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
@@ -653,6 +804,10 @@ public class Sintactico {
                 if(auxVar==6){
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un tipo de dato");
@@ -660,6 +815,10 @@ public class Sintactico {
                 if(auxVar==7){
                     if (Token.matches(Identificador)) {
                         System.out.println("Identificador correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un identificador");
@@ -667,6 +826,10 @@ public class Sintactico {
                 if(auxVar==8){
                     if (Token.equals(")")) {
                         System.out.println("Parentesis de cerrado correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esparaba parentesis de cerrado )");
@@ -674,6 +837,10 @@ public class Sintactico {
                 if(auxVar==9){
                     if (Token.equals("como")) {
                         System.out.println("Palabra de asignacion de funcion \"como\" correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
@@ -681,6 +848,10 @@ public class Sintactico {
                 if(auxVar==10){
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
@@ -699,6 +870,10 @@ public class Sintactico {
             if (auxVar == 1) {
                 if (Token.matches(Identificador)) {
                     System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un identificador");
@@ -706,6 +881,10 @@ public class Sintactico {
             if(auxVar==2){
                 if (Token.equals("(")) {
                     System.out.println("Apertura correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un (");
@@ -713,12 +892,20 @@ public class Sintactico {
             if(auxVar==3){
                 if (Token.equals(")")) {//Sin parametros
                     System.out.println("Cerrado correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                     inicializaBanderas_Var();
                     procedimientoDetectado=false;
                 }
                 else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
                     System.out.println("Tipo de dato correcto");
                     procedimiento_unParametro=true;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(450);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 }
                 else
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
@@ -728,6 +915,10 @@ public class Sintactico {
                 if (auxVar == 4) {
                     if (Token.matches(Identificador)) {
                         System.out.println("Identificador correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un identificador");
@@ -735,11 +926,19 @@ public class Sintactico {
                 if(auxVar==5){
                     if (Token.equals(")")) {
                         System.out.println("Parentesis de cerrado correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         inicializaBanderas_Var();
                         procedimientoDetectado=false;
                     }
                     if (Token.equals(",")) {
                         System.out.println("Coma de segundo parametro correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         procedimiento_dosParametro=true;//Se procede a verificar el otro parametro
                         procedimiento_unParametro=false;
                     }
@@ -753,6 +952,10 @@ public class Sintactico {
                 if(auxVar==6){
                     if (Token.matches(tipoDato)) {
                         System.out.println("Tipo de dato correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un tipo de dato");
@@ -760,6 +963,10 @@ public class Sintactico {
                 if(auxVar==7){
                     if (Token.matches(Identificador)) {
                         System.out.println("Identificador correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                     }
                     else
                         System.out.println("Se esperaba un identificador");
@@ -767,6 +974,10 @@ public class Sintactico {
                 if(auxVar==8){
                     if (Token.equals(")")) {
                         System.out.println("Parentesis de cerrado correcto");
+                        nombre_Nodo.add(Token);
+                        coordenada_X.add(450);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
                         inicializaBanderas_Var();
                         procedimientoDetectado=false;
                     }
@@ -797,18 +1008,30 @@ public class Sintactico {
             if (auxVar == 0) {//Asignación
                 if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
                     System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba identificador");
             }
             if (auxVar == 1) {
                 if (Token.equals(":=")) {
                     System.out.println("Asignación correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba asignación :=");
             }
             if (auxVar == 2) {
                 if (Token.matches("[0-9]+")) {
                     System.out.println("Tipo de dato correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba tipo de dato");
             }
@@ -816,6 +1039,10 @@ public class Sintactico {
                 if(Token.equals(";")){
                     System.out.println("Separado correcto");
                     asignacionInicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                     inicializaBanderas_Var();
                 }
                 else
@@ -827,24 +1054,40 @@ public class Sintactico {
             if (auxVar == 0) {//Invocar procedimiento o funcion
                 if (Token.matches(Identificador)) {
                     System.out.println("Identificador correcto. Función");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba identificador");
             }
             if (auxVar == 1) {
                 if (Token.equals("(")) {
                     System.out.println("Parentesis de apertura correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba (");
             }
             if (auxVar == 2) {
                 if (Token.equals(")")) {
                     System.out.println("Parentesis de cerrado correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                 } else
                     System.out.println("Se esperaba )");
             }
             if (auxVar == 3) {
                 if(Token.equals(";")){
                     System.out.println("Separado correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
                     invocacionInicio = false;
                     inicializaBanderas_Var();
                 }

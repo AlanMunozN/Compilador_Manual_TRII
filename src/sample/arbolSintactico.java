@@ -64,12 +64,14 @@ public class arbolSintactico extends JFrame{
                     pri=true;
                     if(auxLibreria==0) {
                         System.out.println("Hijo 1");
-                        graph.insertEdge(parent, null, "", v2, nodos.get(i));//liberia
+                        Object Children = nodos.get(i);
+                        graph.insertEdge(parent, null, "", v2, Children);//liberia
                         auxLibreria++;
                     }
                     else if(auxLibreria==1){
                         System.out.println("Hijo 2");
-                        graph.insertEdge(parent, null, "", v2, nodos.get(i));//nombre
+                        Object Children = nodos.get(i);
+                        graph.insertEdge(parent, null, "", v2, Children);//nombre
                         auxLibreria++;
 
                     }
