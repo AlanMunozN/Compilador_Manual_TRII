@@ -198,7 +198,7 @@ public class Sintactico {
     }
 
 
-    boolean programaVerificado=false, libreriaVerificado=false, varVerificado=false, inicioVerificado=false;
+    boolean programaVerificado=false, libreriaVerificado=false, varVerificado=false, inicioVerificado=false, inicioVerificado_Auxiliar=false;
     boolean inicializaCoordenada_Y_VAR=false;
     boolean inicializaCoordenada_Y_INICIO=false;
 
@@ -257,13 +257,23 @@ public class Sintactico {
 
                         if (ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
                             System.out.println("Se encontró inicio");
-                            varVerificado = false;
+                            varVerificado = false; // no se activa si funcion_procedimientoProhibido está en true, para
+                            //que siga verificando en la parte de var lo de inicio y lo deje con su coordenada específica
                             i--;
                         }
                     }
                 }
-                } else if (ctrl.lexico_Token.get(i).equals("inicio") || inicioVerificado == true) {//Arreglar la bandera
+                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false|| inicioVerificado == true) {//Arreglar la bandera
                     inicioVerificado = true;
+
+                //Si espera está encendida entra al inicio auxilar
+
+
+                /*
+                    Si la bandera de esperaFin_Proc o eperaFin_Func cambia a false se reinicia inicioVerficiado=false
+                    Esto para que pueda entrar cuando ya sea la sección de inicio normal
+                 */
+
                     System.out.println("Verifica inicio");
 
                     if (inicializaCoordenada_Y_INICIO == false)
@@ -321,7 +331,110 @@ public class Sintactico {
                         }
                     }
                     //Contiene un bloque. El cual es génerico
+                }else if (ctrl.lexico_Token.get(i).equals("inicio") || esperaFin_Func==true || esperaFin_Proc==true || inicioVerificado_Auxiliar == true) {//Arreglar la bandera
+                inicioVerificado_Auxiliar = true;
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////Inicio auxiliar////////////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+                /*
+                    Si la bandera de esperaFin_Proc o eperaFin_Func cambia a false se reinicia inicioVerficiado=false
+                    Esto para que pueda entrar cuando ya sea la sección de inicio normal
+                 */
+
+                System.out.println("Verifica inicio auxiliar");
+
+
+
+                if (ctrl.lexico_Identificador.get(i).equals("Comentario Bloque") || ctrl.lexico_Identificador.get(i).equals("Comentario Linea")) {
+                    if (auxSize_Lexico < listaLexico_Size) {
+                        i++;
+                    }
                 }
+
+                if (ctrl.lexico_Token.get(i).equals("inicio")) {
+                    inicializaBanderas_Var();
+                    auxVar = 0;
+                }
+                if (!ctrl.lexico_Token.get(i).equals("inicio")) {
+                    if (auxSize_Lexico < listaLexico_Size) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")) {
+                            asignacionInicio = true;
+                            System.out.println("Va asignación");
+                            nombre_Nodo.add("<Asignación>");
+                            coordenada_X.add(450);
+                            coodernada_Y.add(cordY);
+                            cordY = cordY + 100;
+                        }
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {//No puede haber invocaciones.
+                            //Se quitaría
+                            invocacionInicio = true;
+                            System.out.println("Va invocación");
+                            nombre_Nodo.add("<Invocación>");
+                            coordenada_X.add(450);
+                            coodernada_Y.add(cordY);
+                            cordY = cordY + 100;
+                        }
+                    }
+                    System.out.println("Verificando en inicio auxiliar: " + ctrl.lexico_Token.get(i));
+                    //Agregar de minetras sea difrente a inicio como en la parte de var
+                    secciónInicio_VAR(ctrl.lexico_Token.get(i));
+                }
+                if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                    if(esperaFin_Func==true) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finfunc")) {//Cambiar por el por finfunc o finproc
+                            //según la bandera que esté encendida
+                            //esperaFinFunc
+                            //esperaFinProc
+                            System.out.println("FINFUNC_DETECTADO");
+                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                System.out.println("Fin función detectado");
+                                nombre_Nodo.add("finfunc");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+
+                                nombre_Nodo.add(";");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                                //abrirArbol();
+                                esperaFin_Func=false;//Se pueda contiuar validando var
+                                inicioVerificado_Auxiliar=false;//Se pueda verificar otro
+                                funcion_procedimientoProhibido=false;//Se pueda verificar otro
+                            }
+                        }
+                    }
+                }
+                if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                    if(esperaFin_Proc==true) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finproc")) {//Cambiar por el por finfunc o finproc
+                            //según la bandera que esté encendida
+                            //esperaFinFunc
+                            //esperaFinProc
+                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                System.out.println("Fin procedimiento detectado");
+                                nombre_Nodo.add("finproc");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+
+                                nombre_Nodo.add(";");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                                //abrirArbol();
+                                esperaFin_Proc=false;
+                                inicioVerificado_Auxiliar=false;
+                                funcion_procedimientoProhibido=false;
+                            }
+                        }
+                    }
+                }
+                //Contiene un bloque. El cual es génerico
+            }
             }
         }
 
@@ -378,6 +491,8 @@ public class Sintactico {
 
     boolean procedimiento_unParametro=false;
     boolean procedimiento_dosParametro=false;
+
+    boolean funcion_procedimientoProhibido=false;
 
     public void inicializaBanderas_Var(){
         ID_Encontrado=false; Asignacion_Encontrado=false; tipoDato_Encontrado=false; tipoArreglo_Encontrado=false; Separador_Encontrado=false;
@@ -509,21 +624,27 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else if(Token.equals("funcion")) {
+            else if(Token.equals("funcion") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
+                //declaración de una función o procedimiento, ya que está prohibido
                 System.out.println("función correcto. Identificado");
                 funcionDetectado=true;
                 nombre_Nodo.add(Token);
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                funcion_procedimientoProhibido=true;//Encendemos bandera.
+                esperaFin_Func=true;
             }
-            else if(Token.equals("procedimiento")) {
+            else if(Token.equals("procedimiento") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
+                //declaración de una función o procedimiento, ya que está prohibido
                 System.out.println("procedimiento correcto. Identificado");
                 procedimientoDetectado=true;
                 nombre_Nodo.add(Token);
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                funcion_procedimientoProhibido=true;//Encendemos bandera
+                esperaFin_Proc=true;
             }
         }
         if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
@@ -994,7 +1115,14 @@ public class Sintactico {
     boolean asignacionInicio=false;
     boolean invocacionInicio=false;
 
-    public void secciónInicio(String Token){
+
+    //seecionInicio_Para funciones o procedimientos. Es copia de lo abajo
+
+    int coordenadaX_VAR=450;
+
+
+    public void secciónInicio(String Token){//Puede ser usada pra los procedimientos y funciones
+        //El for de Tokens se encarga de la declaración de cordX y cordY
         /*
         <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
             | escribir | <comentarios>
@@ -1009,7 +1137,7 @@ public class Sintactico {
                 if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
                     System.out.println("Identificador correcto");
                     nombre_Nodo.add(Token);
-                    coordenada_X.add(550);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 } else
@@ -1032,12 +1160,19 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                }else if(Token.matches("[\"].*[\"]")){
+                    System.out.println("Tipo de dato correcto. Tipo cadema");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }
+                else
                     System.out.println("Se esperaba tipo de dato");
             }
             if(auxVar == 3){
                 if(Token.equals(";")){
-                    System.out.println("Separado correcto");
+                    System.out.println("Separador correcto");
                     asignacionInicio = false;
                     nombre_Nodo.add(Token);
                     coordenada_X.add(550);
@@ -1050,8 +1185,8 @@ public class Sintactico {
             }
         }
 
-        if(invocacionInicio==true) {//Los paréntesis pueden ser tomados como el conjunto en léxico y solo se verifica con un match
-            if (auxVar == 0) {//Invocar procedimiento o funcion
+        if(invocacionInicio==true) {//Invocar procedimiento o funcion
+            if (auxVar == 0) {
                 if (Token.matches(Identificador)) {
                     System.out.println("Identificador correcto. Función");
                     nombre_Nodo.add(Token);
@@ -1092,9 +1227,126 @@ public class Sintactico {
                     inicializaBanderas_Var();
                 }
                 else
+                    System.out.println("Se esperaba separador ;");
+            }
+        }
+
+
+
+        auxVar=auxVar+1;
+    }
+
+    public void secciónInicio_VAR(String Token){//Puede ser usada pra los procedimientos y funciones
+        //El for de Tokens se encarga de la declaración de cordX y cordY
+        /*
+        <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
+            | escribir | <comentarios>
+         */
+        String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
+        String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+
+        System.out.println("auxVar - Inicio: "+auxVar);
+
+        if(asignacionInicio==true) {//La bandera cambiar por que en el for verifico el token siguiente y si es := se activa la bandera
+            if (auxVar == 0) {//Asignación
+                if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else
+                    System.out.println("Se esperaba identificador");
+            }
+            if (auxVar == 1) {
+                if (Token.equals(":=")) {
+                    System.out.println("Asignación correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else
+                    System.out.println("Se esperaba asignación :=");
+            }
+            if (auxVar == 2) {
+                if (Token.matches("[0-9]+")) {
+                    System.out.println("Tipo de dato correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }else if(Token.matches("[\"].*[\"]")){
+                    System.out.println("Tipo de dato correcto. Tipo cadema");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }
+                else
+                    System.out.println("Se esperaba tipo de dato");
+            }
+            if(auxVar == 3){
+                if(Token.equals(";")){
+                    System.out.println("Separador correcto");
+                    asignacionInicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    inicializaBanderas_Var();
+                }
+                else
                     System.out.println("Se esperada separador ;");
             }
         }
+
+        if(invocacionInicio==true) {//Invocar procedimiento o funcion
+            if (auxVar == 0) {
+                if (Token.matches(Identificador)) {
+                    System.out.println("Identificador correcto. Función");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else
+                    System.out.println("Se esperaba identificador");
+            }
+            if (auxVar == 1) {
+                if (Token.equals("(")) {
+                    System.out.println("Parentesis de apertura correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else
+                    System.out.println("Se esperaba (");
+            }
+            if (auxVar == 2) {
+                if (Token.equals(")")) {
+                    System.out.println("Parentesis de cerrado correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else
+                    System.out.println("Se esperaba )");
+            }
+            if (auxVar == 3) {
+                if(Token.equals(";")){
+                    System.out.println("Separado correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    invocacionInicio = false;
+                    inicializaBanderas_Var();
+                }
+                else
+                    System.out.println("Se esperaba separador ;");
+            }
+        }
+
+
 
         auxVar=auxVar+1;
     }
