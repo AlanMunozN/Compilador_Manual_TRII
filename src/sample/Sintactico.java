@@ -455,6 +455,7 @@ public class Sintactico {
             }
             else {
                 System.out.println("Error en declaración de programa. Se esperaba nombre de programa");
+                ctrl.txtMensajes.appendText("Error en declaración de programa. Se esperaba nombre de programa");
             }
         }
     }
@@ -473,6 +474,7 @@ public class Sintactico {
             }
             else {
                 System.out.println("Error en declaración de libreria. Se esperaba nombre de libreria");
+                ctrl.txtMensajes.appendText("Error en declaración de libreria. Se esperaba nombre de programa");
             }
         }
     }
@@ -655,8 +657,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba :");
+                ctrl.txtMensajes.appendText("\nSe esperaba :");
+            }
         }
         if(auxVar==2 && funcionDetectado==false && procedimientoDetectado==false){
             if(Token.matches(tipoDato)){
@@ -674,8 +678,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba tipo de dato");
+                ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+            }
         }
         if(auxVar==3 && arregloDetectado==false && funcionDetectado==false && procedimientoDetectado==false){//Será para declaración normal
             if(Token.equals(";")){
@@ -686,8 +692,10 @@ public class Sintactico {
                 cordY=cordY+100;
                 inicializaBanderas_Var();
             }
-            else
+            else {
                 System.out.println("Se esperaba ;");
+                ctrl.txtMensajes.appendText("\nSe esperaba ;");
+            }
         }
         if(auxVar==3 && arregloDetectado==true){//Arreglo detectado
             if(Token.equals("[")){
@@ -697,8 +705,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba [");
+                ctrl.txtMensajes.appendText("\nSe esperaba [");
+            }
         }
         if(auxVar==4 && arregloDetectado==true){
             if(Token.equals("1")){
@@ -708,8 +718,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba inicio de arreglo 1");
+                ctrl.txtMensajes.appendText("\nSe esperaba inicio de arreglo 1");
+            }
         }
         if(auxVar==5 && arregloDetectado==true){
             if(Token.equals("..")){
@@ -719,8 +731,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba .. de arreglo ");
+                ctrl.txtMensajes.appendText("\nSe esperaba .. de arreglo");
+            }
         }
         if(auxVar==6 && arregloDetectado==true){
             if(Token.matches("[0-9]+")){
@@ -730,8 +744,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba límite de arreglo");
+                ctrl.txtMensajes.appendText("\nSe esperaba limite de areglo");
+            }
         }
         if(auxVar==7 && arregloDetectado==true){
             if(Token.equals("]")){
@@ -741,8 +757,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba ]");
+                ctrl.txtMensajes.appendText("\nSe esperaba ]");
+            }
         }
         if(auxVar==8 && arregloDetectado==true){
             if(Token.equals("de")){
@@ -752,8 +770,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba de");
+                ctrl.txtMensajes.appendText("\nSe esperaba de");
+            }
         }
         if(auxVar==9 && arregloDetectado==true){
             if(Token.matches(tipoDato)){
@@ -763,8 +783,10 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
             }
-            else
+            else {
                 System.out.println("Se esperaba tipo de dato de arreglo");
+                ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato de arreglo");
+            }
         }
         if(auxVar==10 && arregloDetectado==true){
             if(Token.equals(";")){
@@ -775,8 +797,10 @@ public class Sintactico {
                 cordY=cordY+100;
                 inicializaBanderas_Var();
             }
-            else
+            else {
                 System.out.println("Se esperaba ;");
+                ctrl.txtMensajes.appendText("\nSe esperaba ;");
+            }
         }
 
 
@@ -792,8 +816,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                }
             }
             if(auxVar==2){
                 if (Token.equals("(")) {
@@ -803,8 +829,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un (");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                }
             }
             if(auxVar==3){
                 if (Token.equals(")")) {//Sin parametros
@@ -823,8 +851,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                }
             }
 
 
@@ -837,8 +867,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de funcion \"como\"");
+                    }
                 }
                 if(auxVar==5){
                     if (Token.matches(tipoDato)) {
@@ -850,8 +882,10 @@ public class Sintactico {
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un tipo de dato");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                    }
                 }
             }
 
@@ -865,8 +899,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un identificador");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    }
                 }
                 if(auxVar==5){
                     if (Token.equals(")")) {
@@ -887,8 +923,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
+                        ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                    }
                 }
             }
 
@@ -902,8 +940,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación o de función \"como\"");
+                    }
                 }
                 if(auxVar==7){
                     if (Token.matches(tipoDato)) {
@@ -915,8 +955,10 @@ public class Sintactico {
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un tipo de dato");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                    }
                 }
             }
 
@@ -930,8 +972,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un tipo de dato");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                    }
                 }
                 if(auxVar==7){
                     if (Token.matches(Identificador)) {
@@ -941,8 +985,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un identificador");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    }
                 }
                 if(auxVar==8){
                     if (Token.equals(")")) {
@@ -952,8 +998,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esparaba parentesis de cerrado )");
+                        ctrl.txtMensajes.appendText("\nSe esperaba parentesis de cerrado )");
+                    }
                 }
                 if(auxVar==9){
                     if (Token.equals("como")) {
@@ -963,8 +1011,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
+                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de función \"como\"");
+                    }
                 }
                 if(auxVar==10){
                     if (Token.matches(tipoDato)) {
@@ -976,8 +1026,10 @@ public class Sintactico {
                         inicializaBanderas_Var();
                         funcionDetectado=false;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un tipo de dato");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                    }
                 }
             }
 
@@ -996,8 +1048,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                }
             }
             if(auxVar==2){
                 if (Token.equals("(")) {
@@ -1007,8 +1061,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un (");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                }
             }
             if(auxVar==3){
                 if (Token.equals(")")) {//Sin parametros
@@ -1028,8 +1084,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
+                    ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                }
             }
 
             if(procedimiento_unParametro==true){
@@ -1041,8 +1099,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un identificador");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    }
                 }
                 if(auxVar==5){
                     if (Token.equals(")")) {
@@ -1063,8 +1123,10 @@ public class Sintactico {
                         procedimiento_dosParametro=true;//Se procede a verificar el otro parametro
                         procedimiento_unParametro=false;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
+                        ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                    }
                 }
             }
 
@@ -1078,8 +1140,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un tipo de dato");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                    }
                 }
                 if(auxVar==7){
                     if (Token.matches(Identificador)) {
@@ -1089,8 +1153,10 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
                     }
-                    else
+                    else {
                         System.out.println("Se esperaba un identificador");
+                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    }
                 }
                 if(auxVar==8){
                     if (Token.equals(")")) {
@@ -1102,8 +1168,10 @@ public class Sintactico {
                         inicializaBanderas_Var();
                         procedimientoDetectado=false;
                     }
-                    else
+                    else {
                         System.out.println("Se esparaba parentesis de cerrado )");
+                        ctrl.txtMensajes.appendText("\nSe esperaba paréntesis de cerrado");
+                    }
                 }
             }
 
@@ -1140,8 +1208,10 @@ public class Sintactico {
                     coordenada_X.add(550);//Para la temporal de var cambiar este valor
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                }
             }
             if (auxVar == 1) {
                 if (Token.equals(":=")) {
@@ -1150,8 +1220,10 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba asignación :=");
+                    ctrl.txtMensajes.appendText("\nSe esperaba asiganación :=");
+                }
             }
             if (auxVar == 2) {
                 if (Token.matches("[0-9]+")) {
@@ -1167,8 +1239,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba tipo de dato");
+                    ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                }
             }
             if(auxVar == 3){
                 if(Token.equals(";")){
@@ -1180,8 +1254,10 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
                 }
-                else
+                else {
                     System.out.println("Se esperada separador ;");
+                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                }
             }
         }
 
@@ -1193,8 +1269,10 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                }
             }
             if (auxVar == 1) {
                 if (Token.equals("(")) {
@@ -1203,8 +1281,10 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba (");
+                    ctrl.txtMensajes.appendText("\nSe esperaba (");
+                }
             }
             if (auxVar == 2) {
                 if (Token.equals(")")) {
@@ -1213,8 +1293,10 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba )");
+                    ctrl.txtMensajes.appendText("\nSe esperaba )");
+                }
             }
             if (auxVar == 3) {
                 if(Token.equals(";")){
@@ -1226,8 +1308,10 @@ public class Sintactico {
                     invocacionInicio = false;
                     inicializaBanderas_Var();
                 }
-                else
+                else {
                     System.out.println("Se esperaba separador ;");
+                    ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                }
             }
         }
 
@@ -1255,8 +1339,10 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);//Para la temporal de var cambiar este valor
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                }
             }
             if (auxVar == 1) {
                 if (Token.equals(":=")) {
@@ -1265,8 +1351,10 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba asignación :=");
+                    ctrl.txtMensajes.appendText("\nSe esperaba asiganción :=");
+                }
             }
             if (auxVar == 2) {
                 if (Token.matches("[0-9]+")) {
@@ -1282,8 +1370,10 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 }
-                else
+                else {
                     System.out.println("Se esperaba tipo de dato");
+                    ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                }
             }
             if(auxVar == 3){
                 if(Token.equals(";")){
@@ -1295,8 +1385,10 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
                 }
-                else
+                else {
                     System.out.println("Se esperada separador ;");
+                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                }
             }
         }
 
@@ -1308,8 +1400,10 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba identificador");
+                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                }
             }
             if (auxVar == 1) {
                 if (Token.equals("(")) {
@@ -1318,8 +1412,10 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba (");
+                    ctrl.txtMensajes.appendText("\nSe esperaba (");
+                }
             }
             if (auxVar == 2) {
                 if (Token.equals(")")) {
@@ -1328,8 +1424,10 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
-                } else
+                } else {
                     System.out.println("Se esperaba )");
+                    ctrl.txtMensajes.appendText("\nSe esperaba )");
+                }
             }
             if (auxVar == 3) {
                 if(Token.equals(";")){
@@ -1341,8 +1439,10 @@ public class Sintactico {
                     invocacionInicio = false;
                     inicializaBanderas_Var();
                 }
-                else
+                else {
                     System.out.println("Se esperaba separador ;");
+                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                }
             }
         }
 

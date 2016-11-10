@@ -695,4 +695,15 @@ public class Controller implements Initializable{
         else
             txtMensajes.appendText("No se puede proseguir por errores léxicos encontrados"+"\n");
     }
+
+    public void comenzarSemantico(){
+        Semantico sem = new Semantico();
+        sem.Declarada=false;
+        sem.noDeclarada=false;
+        sem.recorreToken();
+        if(sem.Declarada==true)
+            txtMensajes.appendText(sem.variable_yaDeclarada);
+        else if(sem.noDeclarada==true)
+            txtMensajes.appendText(sem.variable_noDeclarada);
+    }
 }
