@@ -23,6 +23,9 @@ public class Sintactico {
     public  static ArrayList<Integer> coodernada_Y = new ArrayList<>(Arrays.asList());//Coordenanda Y
 
 
+    boolean errorSintactico_Encontrado_Parar=false;
+    String mensajeError_Sintactico=null;
+
     boolean programaEncontrado=false;
     public void detectarNodos_Arbol(){
         boolean verificaLibreria=false;
@@ -40,12 +43,17 @@ public class Sintactico {
 
 
 
+
+
         int hijos_Padre=0;
         int auxContador=0;
 
         for(int i=0;i<ctrl.lexico_Token.size();i++){
             auxContador=0;
             auxContador=i+1;
+
+            if(errorSintactico_Encontrado_Parar==true)//Sa termina for
+                break;
 
             if(ctrl.lexico_Token.get(i).equals("programa")){
                 if(auxContador<ctrl.lexico_Token.size()){
@@ -208,18 +216,21 @@ public class Sintactico {
         for (int i = 0; i < listaLexico_Size; i++) {//Orden de la estructura del programa
             auxSize_Lexico = i + 1;
 
+            if(errorSintactico_Encontrado_Parar==true)//Sa termina for
+                break;
+
             System.out.println("Token actual: "+ctrl.lexico_Token.get(i));
 
             //Checar banderas para evitar que ingrese donde no debe. Posible solución variación de estructura según lo que puede encontrar
             if (ctrl.lexico_Token.get(i).equals("programa")) {
                 System.out.println("Verifica prograa");
                 if (auxSize_Lexico < listaLexico_Size) {//Evitar que truene por dirección inválida por tamaño inferior
-                    seccionPrograma(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                    seccionPrograma(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico), ctrl.lexico_Linea.get(i));//Pasamos los valores
                 }
             } else if (ctrl.lexico_Token.get(i).equals("libreria")) {
                 System.out.println("Verifica libreria");
                 if (auxSize_Lexico < listaLexico_Size) {//Evitar que truene por dirección inválida por tamaño inferior
-                    seccionLibreria(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico));//Pasamos los valores
+                    seccionLibreria(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico), ctrl.lexico_Linea.get(i));//Pasamos los valores
                 }
             } else if (ctrl.lexico_Token.get(i).equals("var") || varVerificado == true) {
                 varVerificado = true;
@@ -252,7 +263,7 @@ public class Sintactico {
                             cordY = cordY + 100;
                         }
 
-                        Asignacion_Var(ctrl.lexico_Token.get(i));
+                        Asignacion_Var(ctrl.lexico_Token.get(i), ctrl.lexico_Linea.get(i));
                         //Si detecta funcion o procedimiento entra a esa sección para verificar
 
                         if (ctrl.lexico_Token.get(i).equals("inicio")) {//Ver como iría esta verificación
@@ -263,7 +274,7 @@ public class Sintactico {
                         }
                     }
                 }
-                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false|| inicioVerificado == true) {//Arreglar la bandera
+                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false) {//Arreglar la bandera
                     inicioVerificado = true;
 
                 //Si espera está encendida entra al inicio auxilar
@@ -290,7 +301,7 @@ public class Sintactico {
                         inicializaBanderas_Var();
                         auxVar = 0;
                     }
-                    if (!ctrl.lexico_Token.get(i).equals("inicio")) {
+                    if (!ctrl.lexico_Token.get(i).equals("inicio")) {//AQUI
                         if (auxSize_Lexico < listaLexico_Size) {
                             if (ctrl.lexico_Token.get(auxSize_Lexico).equals(":=")) {
                                 asignacionInicio = true;
@@ -309,9 +320,30 @@ public class Sintactico {
                                 cordY = cordY + 100;
                             }
                         }
+
+                        if(ctrl.lexico_Token.get(i).equals("hazlo_si")){
+                            hazlo_siInicio=true;
+                            System.out.println("Va hazlo_si");
+                            nombre_Nodo.add("<Va hazlo si>");
+                            coordenada_X.add(550);
+                            coodernada_Y.add(cordY);
+                            cordY=cordY+100;
+
+                        }
+
+                        if(ctrl.lexico_Token.get(i).equals("repite")){
+                            repiteInicio=true;
+                            System.out.println("Va repite");
+                            nombre_Nodo.add("<Va repite>");
+                            coordenada_X.add(550);
+                            coodernada_Y.add(cordY);
+                            cordY=cordY+100;
+
+                        }
+
                         System.out.println("Verificando en inicio: " + ctrl.lexico_Token.get(i));
                         //Agregar de minetras sea difrente a inicio como en la parte de var
-                        secciónInicio(ctrl.lexico_Token.get(i));
+                        secciónInicio(ctrl.lexico_Token.get(i), ctrl.lexico_Linea.get(i));
                     }
                     if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                         if (ctrl.lexico_Token.get(auxSize_Lexico).equals("fin")) {
@@ -331,7 +363,7 @@ public class Sintactico {
                         }
                     }
                     //Contiene un bloque. El cual es génerico
-                }else if (ctrl.lexico_Token.get(i).equals("inicio") || esperaFin_Func==true || esperaFin_Proc==true || inicioVerificado_Auxiliar == true) {//Arreglar la bandera
+                }else if (ctrl.lexico_Token.get(i).equals("inicio") || esperaFin_Func==true || esperaFin_Proc==true || inicioVerificado_Auxiliar == true) {
                 inicioVerificado_Auxiliar = true;
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -378,9 +410,30 @@ public class Sintactico {
                             cordY = cordY + 100;
                         }
                     }
+
+                    if(ctrl.lexico_Token.get(i).equals("hazlo_si")){
+                        hazlo_siInicio=true;
+                        System.out.println("Va hazlo_si");
+                        nombre_Nodo.add("<Va hazlo si>");
+                        coordenada_X.add(550);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
+
+                    }
+
+                    if(ctrl.lexico_Token.get(i).equals("repite")){
+                        repiteInicio=true;
+                        System.out.println("Va repite");
+                        nombre_Nodo.add("<Va repite>");
+                        coordenada_X.add(550);
+                        coodernada_Y.add(cordY);
+                        cordY=cordY+100;
+
+                    }
+
                     System.out.println("Verificando en inicio auxiliar: " + ctrl.lexico_Token.get(i));
                     //Agregar de minetras sea difrente a inicio como en la parte de var
-                    secciónInicio_VAR(ctrl.lexico_Token.get(i));
+                    secciónInicio_VAR(ctrl.lexico_Token.get(i), ctrl.lexico_Linea.get(i));
                 }
                 if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                     if(esperaFin_Func==true) {
@@ -433,6 +486,33 @@ public class Sintactico {
                         }
                     }
                 }
+
+
+                if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                    if(esperaFin_Proc==true) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finhazlo")) {//Fin hazlo si
+                            //según la bandera que esté encendida
+                            //esperaFinFunc
+                            //esperaFinProc
+                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                System.out.println("Fin hazlo_si detectado");
+                                nombre_Nodo.add("finhazlo");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+
+                                nombre_Nodo.add(";");
+                                coordenada_X.add(450);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                                //abrirArbol();
+                                hazlo_siInicio=false;
+                            }
+                        }
+                    }
+                }
+
+
                 //Contiene un bloque. El cual es génerico
             }
             }
@@ -441,7 +521,7 @@ public class Sintactico {
 
 
 
-    public void seccionPrograma(String Token1, String Token2){
+    public void seccionPrograma(String Token1, String Token2, Integer Linea){
         if(Token1.equals("programa")) {
             if(Token2.matches("[A-Z][a-zA-Z0-9]+")) {
                 nombre_Nodo.add(Token1);
@@ -455,12 +535,14 @@ public class Sintactico {
             }
             else {
                 System.out.println("Error en declaración de programa. Se esperaba nombre de programa");
-                ctrl.txtMensajes.appendText("Error en declaración de programa. Se esperaba nombre de programa");
+                //ctrl.txtMensajes.appendText("Error en declaración de programa. Se esperaba nombre de programa");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Error en declaración de programa. Se esperaba nombre de programa"+" En linea: "+Linea;
             }
         }
     }
 
-    public void seccionLibreria(String Token1, String Token2){
+    public void seccionLibreria(String Token1, String Token2, Integer Linea){
         if(Token1.equals("libreria")) {
             if(Token2.matches("[<][A-Z][a-zA-Z0-9]+[.][p][>]")) {//Si hay otra aumenta 100 en Y
                 nombre_Nodo.add(Token1);
@@ -474,7 +556,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Error en declaración de libreria. Se esperaba nombre de libreria");
-                ctrl.txtMensajes.appendText("Error en declaración de libreria. Se esperaba nombre de programa");
+                //ctrl.txtMensajes.appendText("Error en declaración de libreria. Se esperaba nombre de programa");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Error en declaración de libreria. Se esperaba nombre de programa"+" En linea: "+Linea;
             }
         }
     }
@@ -611,7 +695,7 @@ public class Sintactico {
     boolean esperaFin_Proc=false;
     boolean esperaFin_Func=false;
 
-    public void Asignacion_Var(String Token){
+    public void Asignacion_Var(String Token, Integer Linea){
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
 
@@ -659,7 +743,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba :");
-                ctrl.txtMensajes.appendText("\nSe esperaba :");
+                //ctrl.txtMensajes.appendText("\nSe esperaba :");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba :"+" En linea: "+Linea;
             }
         }
         if(auxVar==2 && funcionDetectado==false && procedimientoDetectado==false){
@@ -680,7 +766,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba tipo de dato");
-                ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
             }
         }
         if(auxVar==3 && arregloDetectado==false && funcionDetectado==false && procedimientoDetectado==false){//Será para declaración normal
@@ -694,7 +782,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba ;");
-                ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                //ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba ;"+" En linea: "+Linea;
             }
         }
         if(auxVar==3 && arregloDetectado==true){//Arreglo detectado
@@ -707,7 +797,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba [");
-                ctrl.txtMensajes.appendText("\nSe esperaba [");
+                //ctrl.txtMensajes.appendText("\nSe esperaba [");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba ["+" En linea: "+Linea;
             }
         }
         if(auxVar==4 && arregloDetectado==true){
@@ -720,7 +812,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba inicio de arreglo 1");
-                ctrl.txtMensajes.appendText("\nSe esperaba inicio de arreglo 1");
+                //ctrl.txtMensajes.appendText("\nSe esperaba inicio de arreglo 1");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba inicio de arreglo 1"+" En linea: "+Linea;
             }
         }
         if(auxVar==5 && arregloDetectado==true){
@@ -733,7 +827,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba .. de arreglo ");
-                ctrl.txtMensajes.appendText("\nSe esperaba .. de arreglo");
+                //ctrl.txtMensajes.appendText("\nSe esperaba .. de arreglo");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba .. de arreglo"+" En linea: "+Linea;
             }
         }
         if(auxVar==6 && arregloDetectado==true){
@@ -746,7 +842,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba límite de arreglo");
-                ctrl.txtMensajes.appendText("\nSe esperaba limite de areglo");
+                //ctrl.txtMensajes.appendText("\nSe esperaba limite de areglo");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba limite de arreglo"+" En linea: "+Linea;
             }
         }
         if(auxVar==7 && arregloDetectado==true){
@@ -759,7 +857,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba ]");
-                ctrl.txtMensajes.appendText("\nSe esperaba ]");
+                //ctrl.txtMensajes.appendText("\nSe esperaba ]");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba ]"+" En linea: "+Linea;
             }
         }
         if(auxVar==8 && arregloDetectado==true){
@@ -772,7 +872,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba de");
-                ctrl.txtMensajes.appendText("\nSe esperaba de");
+                //ctrl.txtMensajes.appendText("\nSe esperaba de");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba de"+" En linea: "+Linea;
             }
         }
         if(auxVar==9 && arregloDetectado==true){
@@ -785,7 +887,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba tipo de dato de arreglo");
-                ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato de arreglo");
+                //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato de arreglo");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba tipo de dato de arreglo"+" En linea: "+Linea;
             }
         }
         if(auxVar==10 && arregloDetectado==true){
@@ -799,7 +903,9 @@ public class Sintactico {
             }
             else {
                 System.out.println("Se esperaba ;");
-                ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                //ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                errorSintactico_Encontrado_Parar=true;
+                mensajeError_Sintactico="Se esperaba ;"+" En linea: "+Linea;
             }
         }
 
@@ -818,7 +924,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba un identificador"+" En linea: "+Linea;
                 }
             }
             if(auxVar==2){
@@ -831,7 +939,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un (");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba un ("+" En linea: "+Linea;
                 }
             }
             if(auxVar==3){
@@ -853,7 +963,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato o parentesis de cerrado"+" En linea: "+Linea;
                 }
             }
 
@@ -869,7 +981,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
-                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de funcion \"como\"");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de funcion \"como\"");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba palabra de asignacion de funcion \"como\""+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==5){
@@ -884,7 +998,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                     }
                 }
             }
@@ -901,7 +1017,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba un identificador"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==5){
@@ -925,7 +1043,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
-                        ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba una coma o parentesis de cerrado"+" En linea: "+Linea;
                     }
                 }
             }
@@ -942,7 +1062,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
-                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación o de función \"como\"");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación o de función \"como\"");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba una palabra de asignación o de funcion \"como\""+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==7){
@@ -957,7 +1079,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                     }
                 }
             }
@@ -974,7 +1098,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==7){
@@ -987,7 +1113,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba un identificador"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==8){
@@ -1000,7 +1128,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esparaba parentesis de cerrado )");
-                        ctrl.txtMensajes.appendText("\nSe esperaba parentesis de cerrado )");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba parentesis de cerrado )");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba parentesis de cerrado )"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==9){
@@ -1013,7 +1143,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
-                        ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de función \"como\"");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de función \"como\"");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba palabra de asignacion de funcion \"como\""+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==10){
@@ -1028,7 +1160,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                     }
                 }
             }
@@ -1050,7 +1184,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                 }
             }
             if(auxVar==2){
@@ -1063,7 +1199,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un (");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un (");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba un ("+" En linea: "+Linea;
                 }
             }
             if(auxVar==3){
@@ -1086,7 +1224,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
-                    ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato o paréntesis de cerrado");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato o parentesis de cerrado"+" En linea: "+Linea;
                 }
             }
 
@@ -1101,7 +1241,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba un identificador"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==5){
@@ -1125,7 +1267,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
-                        ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba una coma o paréntesis de cerrado");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba una coma o parentesis de cerrado"+" En linea: "+Linea;
                     }
                 }
             }
@@ -1142,7 +1286,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un tipo de dato");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==7){
@@ -1155,7 +1301,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
-                        ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba un identificador");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba un identificador"+" En linea: "+Linea;
                     }
                 }
                 if(auxVar==8){
@@ -1170,7 +1318,9 @@ public class Sintactico {
                     }
                     else {
                         System.out.println("Se esparaba parentesis de cerrado )");
-                        ctrl.txtMensajes.appendText("\nSe esperaba paréntesis de cerrado");
+                        //ctrl.txtMensajes.appendText("\nSe esperaba paréntesis de cerrado");
+                        errorSintactico_Encontrado_Parar=true;
+                        mensajeError_Sintactico="Se esperaba parentesis de cerrado"+" En linea: "+Linea;
                     }
                 }
             }
@@ -1182,6 +1332,8 @@ public class Sintactico {
 
     boolean asignacionInicio=false;
     boolean invocacionInicio=false;
+    boolean hazlo_siInicio=false;
+    boolean repiteInicio=false;
 
 
     //seecionInicio_Para funciones o procedimientos. Es copia de lo abajo
@@ -1189,7 +1341,7 @@ public class Sintactico {
     int coordenadaX_VAR=450;
 
 
-    public void secciónInicio(String Token){//Puede ser usada pra los procedimientos y funciones
+    public void secciónInicio(String Token, Integer Linea){//Puede ser usada pra los procedimientos y funciones
         //El for de Tokens se encarga de la declaración de cordX y cordY
         /*
         <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
@@ -1210,7 +1362,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 1) {
@@ -1222,7 +1376,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba asignación :=");
-                    ctrl.txtMensajes.appendText("\nSe esperaba asiganación :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba asiganación :=");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba asignacion :="+" En linea: "+Linea;
                 }
             }
             if (auxVar == 2) {
@@ -1241,7 +1397,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba tipo de dato");
-                    ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                 }
             }
             if(auxVar == 3){
@@ -1256,9 +1414,47 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperada separador ;");
-                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ;"+" En linea: "+Linea;
                 }
             }
+        }
+
+        if(hazlo_siInicio==true){
+            if(auxVar==0){
+                if(Token.equals("hazlo_si")){
+                    System.out.println("Inicio de hazlo si correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    //INICIOCON
+                }
+                else {
+                    System.out.println("Se esperada instrucción hazlo_si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba instrucción hazlo_si"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==1){
+                if(Token.equals("CONDICION")){//Condicón
+                    System.out.println("Condicíón de hazlo_si correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    inicializaBanderas_Var();
+                }
+                else {
+                    System.out.println("Se esperada condición de  hazlo_si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba condición de  hazlo_si"+" En linea: "+Linea;
+                }
+            }
+
         }
 
         if(invocacionInicio==true) {//Invocar procedimiento o funcion
@@ -1271,7 +1467,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 1) {
@@ -1283,7 +1481,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba (");
-                    ctrl.txtMensajes.appendText("\nSe esperaba (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba (");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba ("+" En linea: "+Linea;
                 }
             }
             if (auxVar == 2) {
@@ -1295,7 +1495,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba )");
-                    ctrl.txtMensajes.appendText("\nSe esperaba )");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba )");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba )"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 3) {
@@ -1310,7 +1512,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba separador ;");
-                    ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ;"+" En linea: "+Linea;
                 }
             }
         }
@@ -1320,7 +1524,7 @@ public class Sintactico {
         auxVar=auxVar+1;
     }
 
-    public void secciónInicio_VAR(String Token){//Puede ser usada pra los procedimientos y funciones
+    public void secciónInicio_VAR(String Token, Integer Linea){//Puede ser usada pra los procedimientos y funciones
         //El for de Tokens se encarga de la declaración de cordX y cordY
         /*
         <bloque> ::= <asignacion> | <si> | <invocar_funcion> |  <invocar_procedimiento> | <para> | <repite> | <hazlo_si> | <encasode> | leer
@@ -1341,7 +1545,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 1) {
@@ -1353,7 +1559,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba asignación :=");
-                    ctrl.txtMensajes.appendText("\nSe esperaba asiganción :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba asiganción :=");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba asignación :="+" En linea: "+Linea;
                 }
             }
             if (auxVar == 2) {
@@ -1372,7 +1580,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba tipo de dato");
-                    ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
                 }
             }
             if(auxVar == 3){
@@ -1387,9 +1597,47 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperada separador ;");
-                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+Linea;
                 }
             }
+        }
+
+        if(hazlo_siInicio==true){
+            if(auxVar==0){
+                if(Token.equals("hazlo_si")){
+                    System.out.println("Inicio de hazlo si correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    //INICIOCON
+                }
+                else {
+                    System.out.println("Se esperada instrucción hazlo_si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba instrucción hazlo_si"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==1){
+                if(Token.equals("CONDICION")){//Condicón
+                    System.out.println("Condicíón de hazlo_si correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    inicializaBanderas_Var();
+                }
+                else {
+                    System.out.println("Se esperada condición de  hazlo_si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba condición de  hazlo_si"+" En linea: "+Linea;
+                }
+            }
+
         }
 
         if(invocacionInicio==true) {//Invocar procedimiento o funcion
@@ -1402,7 +1650,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba identificador");
-                    ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 1) {
@@ -1414,7 +1664,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba (");
-                    ctrl.txtMensajes.appendText("\nSe esperaba (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba (");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba ("+" En linea: "+Linea;
                 }
             }
             if (auxVar == 2) {
@@ -1426,7 +1678,9 @@ public class Sintactico {
                     cordY=cordY+100;
                 } else {
                     System.out.println("Se esperaba )");
-                    ctrl.txtMensajes.appendText("\nSe esperaba )");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba )");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba )"+" En linea: "+Linea;
                 }
             }
             if (auxVar == 3) {
@@ -1441,7 +1695,9 @@ public class Sintactico {
                 }
                 else {
                     System.out.println("Se esperaba separador ;");
-                    ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ;"+" En linea: "+Linea;
                 }
             }
         }

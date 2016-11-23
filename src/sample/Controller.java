@@ -687,13 +687,20 @@ public class Controller implements Initializable{
     }
 
     public void comenzarSintactico(){
+        Sintactico sin = new Sintactico();
+        sin.errorSintactico_Encontrado_Parar=false;
         if(erroresLexicos==false) {
-            Sintactico sin = new Sintactico();
             //sin.detectarNodos_Arbol();
             sin.deteccionNodos_Tokens();
         }
-        else
-            txtMensajes.appendText("No se puede proseguir por errores léxicos encontrados"+"\n");
+        else {
+
+            txtMensajes.appendText("No se puede proseguir por errores léxicos encontrados" + "\n");
+        }
+        if(sin.errorSintactico_Encontrado_Parar==true){
+            txtMensajes.appendText(sin.mensajeError_Sintactico);
+        }
+
     }
 
     public void comenzarSemantico(){
