@@ -23,6 +23,19 @@ public class Sintactico {
     public  static ArrayList<Integer> coodernada_Y = new ArrayList<>(Arrays.asList());//Coordenanda Y
 
 
+    //INICIA TABLA DE SIMBOLOS
+    //Listas para tabla de símbolos
+    public static ArrayList<String> Linea_Tabla = new ArrayList<>(Arrays.asList());
+    public static ArrayList<String> Token_Tabla= new ArrayList<>(Arrays.asList());
+    public static ArrayList<String> Rol_Tabla = new ArrayList<>(Arrays.asList());
+    public static ArrayList<String> Ambito_Tabla = new ArrayList<>(Arrays.asList());
+    public static ArrayList<String> valorInicial_Tabla = new ArrayList<>(Arrays.asList());
+    public static ArrayList<String> valorFinal_Tabla = new ArrayList<>(Arrays.asList());//
+    //ACABA TABLA DE SÏMBOLOS
+
+
+
+
     boolean errorSintactico_Encontrado_Parar=false;
     String mensajeError_Sintactico=null;
 
