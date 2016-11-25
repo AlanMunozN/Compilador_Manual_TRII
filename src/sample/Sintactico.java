@@ -238,6 +238,7 @@ public class Sintactico {
             if (ctrl.lexico_Token.get(i).equals("programa")) {
                 System.out.println("Verifica prograa");
                 if (auxSize_Lexico < listaLexico_Size) {//Evitar que truene por dirección inválida por tamaño inferior
+
                     seccionPrograma(ctrl.lexico_Token.get(i), ctrl.lexico_Token.get(auxSize_Lexico), ctrl.lexico_Linea.get(i));//Pasamos los valores
                 }
             } else if (ctrl.lexico_Token.get(i).equals("libreria")) {
@@ -287,7 +288,7 @@ public class Sintactico {
                         }
                     }
                 }
-                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false) {//Arreglar la bandera
+                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false || inicioVerificado==true) {//Arreglar la bandera
                     inicioVerificado = true;
 
                 //Si espera está encendida entra al inicio auxilar
@@ -361,7 +362,7 @@ public class Sintactico {
                     if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                         if (ctrl.lexico_Token.get(auxSize_Lexico).equals("fin")) {
                             if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(".")) {
-                                System.out.println("Fin detectado");
+                                System.out.println("Fin detectado oficial");
                                 nombre_Nodo.add("fin");
                                 coordenada_X.add(550);
                                 coodernada_Y.add(cordY);
@@ -535,6 +536,23 @@ public class Sintactico {
 
 
     public void seccionPrograma(String Token1, String Token2, Integer Linea){
+
+        //Token1
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token1);
+        Rol_Tabla.add("PR");
+        Ambito_Tabla.add("G");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
+        //Token 2
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token2);
+        Rol_Tabla.add("Identificador");
+        Ambito_Tabla.add("G");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
         if(Token1.equals("programa")) {
             if(Token2.matches("[A-Z][a-zA-Z0-9]+")) {
                 nombre_Nodo.add(Token1);
@@ -556,6 +574,23 @@ public class Sintactico {
     }
 
     public void seccionLibreria(String Token1, String Token2, Integer Linea){
+
+        //Token1
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token1);
+        Rol_Tabla.add("PR");
+        Ambito_Tabla.add("Li");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
+        //Token 2
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token2);
+        Rol_Tabla.add("Identificador");
+        Ambito_Tabla.add("Li");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
         if(Token1.equals("libreria")) {
             if(Token2.matches("[<][A-Z][a-zA-Z0-9]+[.][p][>]")) {//Si hay otra aumenta 100 en Y
                 nombre_Nodo.add(Token1);
@@ -714,6 +749,14 @@ public class Sintactico {
 
         System.out.println("auxVar = "+auxVar);
 
+        //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token);
+        Rol_Tabla.add("");
+        Ambito_Tabla.add("");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
         if(auxVar==0){
             if(Token.matches(Identificador)) {
                 System.out.println("Identificador correcto");
@@ -722,6 +765,11 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+
+                Linea_Tabla.add(Linea.toString());
+                Token_Tabla.add(Token);
+                Rol_Tabla.add("Identificador");
+                Ambito_Tabla.add("G");
             }
             else if(Token.equals("funcion") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
                 //declaración de una función o procedimiento, ya que está prohibido
@@ -733,6 +781,11 @@ public class Sintactico {
                 cordY=cordY+100;
                 funcion_procedimientoProhibido=true;//Encendemos bandera.
                 esperaFin_Func=true;
+
+                Linea_Tabla.add(Linea.toString());
+                Token_Tabla.add(Token);
+                Rol_Tabla.add("PR");
+                Ambito_Tabla.add("Función");
             }
             else if(Token.equals("procedimiento") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
                 //declaración de una función o procedimiento, ya que está prohibido
@@ -744,6 +797,11 @@ public class Sintactico {
                 cordY=cordY+100;
                 funcion_procedimientoProhibido=true;//Encendemos bandera
                 esperaFin_Proc=true;
+
+                Linea_Tabla.add(Linea.toString());
+                Token_Tabla.add(Token);
+                Rol_Tabla.add("PR");
+                Ambito_Tabla.add("Procedimiento");
             }
         }
         if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
@@ -768,6 +826,18 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                if(Token.equals("entero"))
+                    valorInicial_Tabla.add("0");
+                else if(Token.equals("flotante"))
+                    valorInicial_Tabla.add("0.0");
+                if(Token.equals("bool"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("largo"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("byte"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("string"))
+                    valorInicial_Tabla.add("null");
             }
             else if(Token.equals("arreglo")){
                 System.out.println("Tipo de dato arreglo correcto");
@@ -792,6 +862,11 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
                 inicializaBanderas_Var();
+
+                Linea_Tabla.add(Linea.toString());
+                Token_Tabla.add(Token);
+                Rol_Tabla.add("Separador de instrucción");
+                Ambito_Tabla.add("Local");
             }
             else {
                 System.out.println("Se esperaba ;");
@@ -1363,6 +1438,15 @@ public class Sintactico {
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
 
+        //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token);
+        Rol_Tabla.add("");
+        Ambito_Tabla.add("");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
+
         System.out.println("auxVar - Inicio: "+auxVar);
 
         if(asignacionInicio==true) {//La bandera cambiar por que en el for verifico el token siguiente y si es := se activa la bandera
@@ -1545,6 +1629,16 @@ public class Sintactico {
          */
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+
+
+        //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
+        Linea_Tabla.add(Linea.toString());
+        Token_Tabla.add(Token);
+        Rol_Tabla.add("");
+        Ambito_Tabla.add("");
+        valorInicial_Tabla.add("");
+        valorFinal_Tabla.add("");
+
 
         System.out.println("auxVar - Inicio: "+auxVar);
 
