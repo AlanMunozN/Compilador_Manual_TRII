@@ -287,7 +287,7 @@ public class Sintactico {
                         }
                     }
                 }
-                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false) {//Arreglar la bandera
+                } else if (ctrl.lexico_Token.get(i).equals("inicio") && esperaFin_Func==false && esperaFin_Proc==false || inicioVerificado==true) {//Arreglar la bandera
                     inicioVerificado = true;
 
                 //Si espera está encendida entra al inicio auxilar
