@@ -1,0 +1,16 @@
+Tabla de simbolos
+Directorio
+Nombre archivo
+Linea
+Token
+Rol        --------------------------------------------->Indentificador
+Ambito     ------------------->G = global                P.R
+Valor inicial                  L = local                 Número entero
+Valor memoria                  F = función               Flotante
+Valor final                    P = procedimiento         Cadena
+                               B = bloque                Signos de comparación
+                               Li = librería             Signos lógicos
+                               Pr = parametro            Separador de instrución
+                                                         Parentesis
+                                                         Llaves
+

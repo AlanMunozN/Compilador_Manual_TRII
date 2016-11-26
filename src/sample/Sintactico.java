@@ -31,6 +31,9 @@ public class Sintactico {
     public static ArrayList<String> Ambito_Tabla = new ArrayList<>(Arrays.asList());
     public static ArrayList<String> valorInicial_Tabla = new ArrayList<>(Arrays.asList());
     public static ArrayList<String> valorFinal_Tabla = new ArrayList<>(Arrays.asList());//
+
+
+    Hashtable<String,String> valorFinal_Hash = new Hashtable<>();
     //ACABA TABLA DE SÏMBOLOS
 
 
@@ -580,16 +583,16 @@ public class Sintactico {
         Token_Tabla.add(Token1);
         Rol_Tabla.add("PR");
         Ambito_Tabla.add("Li");
-        valorInicial_Tabla.add("");
-        valorFinal_Tabla.add("");
+        valorInicial_Tabla.add(" ");
+        valorFinal_Tabla.add(" ");
 
         //Token 2
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token2);
         Rol_Tabla.add("Identificador");
         Ambito_Tabla.add("Li");
-        valorInicial_Tabla.add("");
-        valorFinal_Tabla.add("");
+        valorInicial_Tabla.add(" ");
+        valorFinal_Tabla.add(" ");
 
         if(Token1.equals("libreria")) {
             if(Token2.matches("[<][A-Z][a-zA-Z0-9]+[.][p][>]")) {//Si hay otra aumenta 100 en Y
@@ -786,6 +789,8 @@ public class Sintactico {
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("PR");
                 Ambito_Tabla.add("Función");
+                valorInicial_Tabla.add(" ");
+                valorFinal_Tabla.add(" ");
             }
             else if(Token.equals("procedimiento") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
                 //declaración de una función o procedimiento, ya que está prohibido
@@ -802,6 +807,8 @@ public class Sintactico {
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("PR");
                 Ambito_Tabla.add("Procedimiento");
+                valorInicial_Tabla.add(" ");
+                valorFinal_Tabla.add(" ");
             }
         }
         if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
@@ -863,10 +870,13 @@ public class Sintactico {
                 cordY=cordY+100;
                 inicializaBanderas_Var();
 
+
                 Linea_Tabla.add(Linea.toString());
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("Separador de instrucción");
                 Ambito_Tabla.add("Local");
+                valorInicial_Tabla.add(" ");
+                valorFinal_Tabla.add(" ");
             }
             else {
                 System.out.println("Se esperaba ;");
@@ -972,6 +982,18 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                if(Token.equals("entero"))
+                    valorInicial_Tabla.add("0");
+                else if(Token.equals("flotante"))
+                    valorInicial_Tabla.add("0.0");
+                if(Token.equals("bool"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("largo"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("byte"))
+                    valorInicial_Tabla.add("0");
+                if(Token.equals("string"))
+                    valorInicial_Tabla.add("null");
             }
             else {
                 System.out.println("Se esperaba tipo de dato de arreglo");
@@ -988,6 +1010,13 @@ public class Sintactico {
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
                 inicializaBanderas_Var();
+
+                Linea_Tabla.add(Linea.toString());
+                Token_Tabla.add(Token);
+                Rol_Tabla.add("Separador de instrucción");
+                Ambito_Tabla.add("Local");
+                valorInicial_Tabla.add(" ");
+                valorFinal_Tabla.add(" ");
             }
             else {
                 System.out.println("Se esperaba ;");
@@ -1009,6 +1038,10 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Identificador");
+                    Ambito_Tabla.add("Local");
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
@@ -1083,6 +1116,11 @@ public class Sintactico {
                         cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
+                        Linea_Tabla.add(Linea.toString());
+                        Token_Tabla.add(Token);
+                        Rol_Tabla.add("Identificador");
+                        Ambito_Tabla.add("Local");
+
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
@@ -1102,6 +1140,10 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Linea_Tabla.add(Linea.toString());
+                        Token_Tabla.add(Token);
+                        Rol_Tabla.add("Identificador");
+                        Ambito_Tabla.add("Local");
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
@@ -1269,6 +1311,10 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Identificador");
+                    Ambito_Tabla.add("Local");
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
@@ -1326,6 +1372,10 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Linea_Tabla.add(Linea.toString());
+                        Token_Tabla.add(Token);
+                        Rol_Tabla.add("Identificador");
+                        Ambito_Tabla.add("Local");
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
@@ -1386,6 +1436,10 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Linea_Tabla.add(Linea.toString());
+                        Token_Tabla.add(Token);
+                        Rol_Tabla.add("Identificador");
+                        Ambito_Tabla.add("Local");
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
