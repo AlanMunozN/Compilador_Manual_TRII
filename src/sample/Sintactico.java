@@ -538,6 +538,14 @@ public class Sintactico {
 
 
 
+    String archivoCorregido="";
+    int auxLinea=1;
+
+
+
+
+
+
     public void seccionPrograma(String Token1, String Token2, Integer Linea){
 
         //Token1
@@ -566,6 +574,8 @@ public class Sintactico {
                 coordenada_X.add(100);
                 coodernada_Y.add(300);
                 programaVerificado=true;
+                archivoCorregido+=Token1+" ";
+                archivoCorregido+=Token2+" ";
             }
             else {
                 System.out.println("Error en declaración de programa. Se esperaba nombre de programa");
@@ -604,6 +614,9 @@ public class Sintactico {
                 coordenada_X.add(260);
                 coodernada_Y.add(200);
                 libreriaVerificado=true;
+
+                archivoCorregido+=Token1+" ";
+                archivoCorregido+=Token2+" ";
             }
             else {
                 System.out.println("Error en declaración de libreria. Se esperaba nombre de libreria");
@@ -776,6 +789,8 @@ public class Sintactico {
                     Ambito_Tabla.add("L");
                 else
                     Ambito_Tabla.add("G");
+
+                archivoCorregido+=Token+" ";
             }
             else if(Token.equals("funcion") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
                 //declaración de una función o procedimiento, ya que está prohibido
@@ -794,6 +809,8 @@ public class Sintactico {
                 Ambito_Tabla.add("Función");
                 valorInicial_Tabla.add(" ");
                 valorFinal_Tabla.add(" ");
+
+                archivoCorregido+=Token+" ";
             }
             else if(Token.equals("procedimiento") && funcion_procedimientoProhibido==false) {//Si está activa que no pueda verificar la
                 //declaración de una función o procedimiento, ya que está prohibido
@@ -812,6 +829,8 @@ public class Sintactico {
                 Ambito_Tabla.add("Procedimiento");
                 valorInicial_Tabla.add(" ");
                 valorFinal_Tabla.add(" ");
+
+                archivoCorregido+=Token+" ";
             }
         }
         if(auxVar==1 && funcionDetectado==false && procedimientoDetectado==false){
@@ -821,12 +840,15 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba :");
                 //ctrl.txtMensajes.appendText("\nSe esperaba :");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba :"+" En linea: "+Linea;
+                archivoCorregido+=":"+" ";
             }
         }
         if(auxVar==2 && funcionDetectado==false && procedimientoDetectado==false){
@@ -848,6 +870,8 @@ public class Sintactico {
                     valorInicial_Tabla.add("0");
                 if(Token.equals("string"))
                     valorInicial_Tabla.add("null");
+
+                archivoCorregido+=Token+" ";
             }
             else if(Token.equals("arreglo")){
                 System.out.println("Tipo de dato arreglo correcto");
@@ -856,6 +880,8 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba tipo de dato");
@@ -880,12 +906,15 @@ public class Sintactico {
                 Ambito_Tabla.add("Local");
                 valorInicial_Tabla.add(" ");
                 valorFinal_Tabla.add(" ");
+
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba ;");
                 //ctrl.txtMensajes.appendText("\nSe esperaba ;");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba ;"+" En linea: "+Linea;
+                archivoCorregido+=";"+" ";
             }
         }
         if(auxVar==3 && arregloDetectado==true){//Arreglo detectado
@@ -895,12 +924,15 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba [");
                 //ctrl.txtMensajes.appendText("\nSe esperaba [");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba ["+" En linea: "+Linea;
+                archivoCorregido+="["+" ";
             }
         }
         if(auxVar==4 && arregloDetectado==true){
@@ -910,12 +942,14 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba inicio de arreglo 1");
                 //ctrl.txtMensajes.appendText("\nSe esperaba inicio de arreglo 1");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba inicio de arreglo 1"+" En linea: "+Linea;
+                archivoCorregido+="1"+" ";
             }
         }
         if(auxVar==5 && arregloDetectado==true){
@@ -925,12 +959,14 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba .. de arreglo ");
                 //ctrl.txtMensajes.appendText("\nSe esperaba .. de arreglo");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba .. de arreglo"+" En linea: "+Linea;
+                archivoCorregido+=".."+" ";
             }
         }
         if(auxVar==6 && arregloDetectado==true){
@@ -940,6 +976,7 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba límite de arreglo");
@@ -955,12 +992,14 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba ]");
                 //ctrl.txtMensajes.appendText("\nSe esperaba ]");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba ]"+" En linea: "+Linea;
+                archivoCorregido+="]"+" ";
             }
         }
         if(auxVar==8 && arregloDetectado==true){
@@ -970,12 +1009,14 @@ public class Sintactico {
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
                 cordY=cordY+100;
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba de");
                 //ctrl.txtMensajes.appendText("\nSe esperaba de");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba de"+" En linea: "+Linea;
+                archivoCorregido+="de"+" ";
             }
         }
         if(auxVar==9 && arregloDetectado==true){
@@ -997,6 +1038,7 @@ public class Sintactico {
                     valorInicial_Tabla.add("0");
                 if(Token.equals("string"))
                     valorInicial_Tabla.add("null");
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba tipo de dato de arreglo");
@@ -1020,12 +1062,15 @@ public class Sintactico {
                 Ambito_Tabla.add("Local");
                 valorInicial_Tabla.add(" ");
                 valorFinal_Tabla.add(" ");
+
+                archivoCorregido+=Token+" ";
             }
             else {
                 System.out.println("Se esperaba ;");
                 //ctrl.txtMensajes.appendText("\nSe esperaba ;");
                 errorSintactico_Encontrado_Parar=true;
                 mensajeError_Sintactico="Se esperaba ;"+" En linea: "+Linea;
+                archivoCorregido+=";"+" ";
             }
         }
 
@@ -1045,6 +1090,7 @@ public class Sintactico {
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Identificador");
                     Ambito_Tabla.add("Local");
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
@@ -1060,12 +1106,14 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba un (");
                     //ctrl.txtMensajes.appendText("\nSe esperaba un (");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba un ("+" En linea: "+Linea;
+                    archivoCorregido+="("+" ";
                 }
             }
             if(auxVar==3){
@@ -1076,6 +1124,7 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 }
                 else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
                     System.out.println("Tipo de dato correcto");
@@ -1102,12 +1151,14 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
                         //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de funcion \"como\"");
                         errorSintactico_Encontrado_Parar=true;
                         mensajeError_Sintactico="Se esperaba palabra de asignacion de funcion \"como\""+" En linea: "+Linea;
+                        archivoCorregido+="como"+" ";
                     }
                 }
                 if(auxVar==5){
@@ -1176,6 +1227,7 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     if (Token.equals(",")) {
                         System.out.println("Coma de segundo parametro correcto");
@@ -1185,6 +1237,7 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
@@ -1204,12 +1257,14 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
                         //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación o de función \"como\"");
                         errorSintactico_Encontrado_Parar=true;
                         mensajeError_Sintactico="Se esperaba una palabra de asignación o de funcion \"como\""+" En linea: "+Linea;
+                        archivoCorregido+="como"+" ";
                     }
                 }
                 if(auxVar==7){
@@ -1233,6 +1288,7 @@ public class Sintactico {
                             valorInicial_Tabla.add("0");
                         if(Token.equals("string"))
                             valorInicial_Tabla.add("null");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
@@ -1264,6 +1320,7 @@ public class Sintactico {
                             valorInicial_Tabla.add("0");
                         if(Token.equals("string"))
                             valorInicial_Tabla.add("null");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
@@ -1284,6 +1341,7 @@ public class Sintactico {
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
                         Ambito_Tabla.add("Local");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
@@ -1299,12 +1357,14 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esparaba parentesis de cerrado )");
                         //ctrl.txtMensajes.appendText("\nSe esperaba parentesis de cerrado )");
                         errorSintactico_Encontrado_Parar=true;
                         mensajeError_Sintactico="Se esperaba parentesis de cerrado )"+" En linea: "+Linea;
+                        archivoCorregido+=")"+" ";
                     }
                 }
                 if(auxVar==9){
@@ -1314,12 +1374,14 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba palabra de asignacion de funcion \"como\"");
                         //ctrl.txtMensajes.appendText("\nSe esperaba palabra de asignación de función \"como\"");
                         errorSintactico_Encontrado_Parar=true;
                         mensajeError_Sintactico="Se esperaba palabra de asignacion de funcion \"como\""+" En linea: "+Linea;
+                        archivoCorregido+="como"+" ";
                     }
                 }
                 if(auxVar==10){
@@ -1331,6 +1393,7 @@ public class Sintactico {
                         cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
@@ -1359,6 +1422,7 @@ public class Sintactico {
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Identificador");
                     Ambito_Tabla.add("Local");
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba un identificador");
@@ -1374,12 +1438,14 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba un (");
                     //ctrl.txtMensajes.appendText("\nSe esperaba un (");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba un ("+" En linea: "+Linea;
+                    archivoCorregido+="("+" ";
                 }
             }
             if(auxVar==3){
@@ -1391,6 +1457,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
                     procedimientoDetectado=false;
+                    archivoCorregido+=Token+" ";
                 }
                 else if (Token.matches(tipoDato)) {//Parametro detectado. Puede ser uno o doble
                     System.out.println("Tipo de dato correcto");
@@ -1412,6 +1479,7 @@ public class Sintactico {
                         valorInicial_Tabla.add("0");
                     if(Token.equals("string"))
                         valorInicial_Tabla.add("null");
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba un tipo de dato o paréntesis de carrado");
@@ -1433,6 +1501,7 @@ public class Sintactico {
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
                         Ambito_Tabla.add("Local");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
@@ -1450,6 +1519,7 @@ public class Sintactico {
                         cordY=cordY+100;
                         inicializaBanderas_Var();
                         procedimientoDetectado=false;
+                        archivoCorregido+=Token+" ";
                     }
                     if (Token.equals(",")) {
                         System.out.println("Coma de segundo parametro correcto");
@@ -1459,6 +1529,7 @@ public class Sintactico {
                         cordY=cordY+100;
                         procedimiento_dosParametro=true;//Se procede a verificar el otro parametro
                         procedimiento_unParametro=false;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba una coma o  paréntesis de cerrado");
@@ -1491,6 +1562,7 @@ public class Sintactico {
                             valorInicial_Tabla.add("0");
                         if(Token.equals("string"))
                             valorInicial_Tabla.add("null");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un tipo de dato");
@@ -1510,6 +1582,7 @@ public class Sintactico {
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
                         Ambito_Tabla.add("Local");
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esperaba un identificador");
@@ -1527,12 +1600,14 @@ public class Sintactico {
                         cordY=cordY+100;
                         inicializaBanderas_Var();
                         procedimientoDetectado=false;
+                        archivoCorregido+=Token+" ";
                     }
                     else {
                         System.out.println("Se esparaba parentesis de cerrado )");
                         //ctrl.txtMensajes.appendText("\nSe esperaba paréntesis de cerrado");
                         errorSintactico_Encontrado_Parar=true;
                         mensajeError_Sintactico="Se esperaba parentesis de cerrado"+" En linea: "+Linea;
+                        archivoCorregido+=")"+" ";
                     }
                 }
             }
@@ -1576,6 +1651,7 @@ public class Sintactico {
                     coordenada_X.add(550);//Para la temporal de var cambiar este valor
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 } else {
                     System.out.println("Se esperaba identificador");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -1590,11 +1666,13 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 } else {
                     System.out.println("Se esperaba asignación :=");
                     //ctrl.txtMensajes.appendText("\nSe esperaba asiganación :=");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba asignacion :="+" En linea: "+Linea;
+                    archivoCorregido+=":="+" ";
                 }
             }
             if (auxVar == 2) {
