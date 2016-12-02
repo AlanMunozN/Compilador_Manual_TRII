@@ -26,7 +26,7 @@ public class Semantico {
 
     boolean parteGlobal=false, parteFuncion=false, parteProcedimiento=false, parteResultados=false;
 
-    public void recorreToken() throws NullPointerException{;
+    public void recorreToken() throws NullPointerException{
 
         int lexicoSize =  ctrl.lexico_Token.size();
         int auxSize;//+1
@@ -95,5 +95,12 @@ public class Semantico {
                 break;
 
         }
+        abrirTabla();
+    }
+
+    public void abrirTabla(){
+        tablaSimbolos tbS = new tablaSimbolos();
+        tbS.pack();
+        tbS.setVisible(true);
     }
 }
