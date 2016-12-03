@@ -1682,12 +1682,14 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 }else if(Token.matches("[\"].*[\"]")){
                     System.out.println("Tipo de dato correcto. Tipo cadema");
                     nombre_Nodo.add(Token);
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperaba tipo de dato");
@@ -1706,18 +1708,22 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
 
+
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
                     Ambito_Tabla.add("L");
                     valorInicial_Tabla.add(" ");
                     valorFinal_Tabla.add(" ");
+                    archivoCorregido+=Token+" ";
+                    archivoCorregido+=Token+" ";
                 }
                 else {
                     System.out.println("Se esperada separador ;");
                     //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba separador ;"+" En linea: "+Linea;
+                    archivoCorregido+=";"+" ";
                 }
             }
         }

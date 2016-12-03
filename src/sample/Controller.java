@@ -282,7 +282,7 @@ public class Controller implements Initializable{
                 "falso|seleccoion|si|finpara|modo|finfuno|funcion|procedimiento|finproc|seccion|sino|evalua|por_omisions|finsel|final" +
                 "|hinhazlo|hazlo_si|repite|finrepite|como|para)";
 
-        String comp = (".*(<|>|>=|<=|==|<>).*");
+        String comp = ("(<|>|>=|<=|==|<>)");
         String numero = ("([0-9]+)");
         String sep = "([]]|[\\[]|.*(;).*)";
         String mat = (".*([+|-|/|*|**|mod]).*");
@@ -394,21 +394,137 @@ public class Controller implements Initializable{
                     }
 
                     if(libreriaEncontrada==false){//Si no se encontró librería por defecto es comparador <
-                        lexico_ID.add(contadorID);
+                        if(sinEspacios[j].equals("<")){
+                            if(j+1<sinEspacios.length){
+                                if(sinEspacios[j+1].equals("=")){//Hay un <=
+                                    String Aux="<=";
+                                    System.out.println("Comparador <=");
+                                    lexico_ID.add(contadorID);
+                                    lexico_Linea.add(contadorLinea);
+                                    lexico_Token.add(Aux);
+                                    lexico_Identificador.add("Comparador");
+                                    j=j+1;
+                                }
+                                else if(sinEspacios[j+1].equals(">")){//Hay un <>
+                                    String Aux="<>";
+                                    System.out.println("Comparador <>");
+                                    lexico_ID.add(contadorID);
+                                    lexico_Linea.add(contadorLinea);
+                                    lexico_Token.add(Aux);
+                                    lexico_Identificador.add("Comparador");
+                                    j=j+1;
+                                }
+                                else{
+                                    System.out.println("Comparador <");
+                                    lexico_ID.add(contadorID);
+                                    lexico_Linea.add(contadorLinea);
+                                    lexico_Token.add(sinEspacios[j]);
+                                    lexico_Identificador.add("Comparador");
+                                }
+                            }
+                            else{
+                                System.out.println("Comparador <");
+                                lexico_ID.add(contadorID);
+                                lexico_Linea.add(contadorLinea);
+                                lexico_Token.add(sinEspacios[j]);
+                                lexico_Identificador.add("Comparador");
+                            }
+                        }
+                        /*lexico_ID.add(contadorID);
                         lexico_Linea.add(contadorLinea);
                         lexico_Token.add(sinEspacios[j]);
                         lexico_Identificador.add("Comparador");
 
-                        System.out.println("Comparador: "+sinEspacios[j]);
+                        System.out.println("Comparador: "+sinEspacios[j]);*/
                     }
 
-                }
-                else if(sinEspacios[j].matches(comp) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
-                    System.out.println("Comparador: "+sinEspacios[j]);
-                    lexico_ID.add(contadorID);
-                    lexico_Linea.add(contadorLinea);
-                    lexico_Token.add(sinEspacios[j]);
-                    lexico_Identificador.add("Comparador");
+                }                                       //Si encuentra un igual
+                else if(sinEspacios[j].matches(comp) || sinEspacios[j].matches("=") && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     if(sinEspacios[j].equals("=")){
+                         if(j+1<sinEspacios.length){
+                             if(sinEspacios[j+1].equals("=")){//Hay un ==
+                                 String Aux="==";
+                                 System.out.println("Comparador ==");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(Aux);
+                                 lexico_Identificador.add("Comparador");
+                                 j=j+1;
+                             }else{
+                                 txtMensajes.appendText("Error léxico en la linea: " + contadorLinea +" Token: "+sinEspacios[j] + "\n");
+                                 linea_conError=true;
+                                 erroresLexicos=true;
+                             }
+                         }else{
+                             txtMensajes.appendText("Error léxico en la linea: " + contadorLinea +" Token: "+sinEspacios[j] + "\n");
+                             linea_conError=true;
+                             erroresLexicos=true;
+                         }
+                     }
+
+                     if(sinEspacios[j].equals("<")){
+                         if(j+1<sinEspacios.length){
+                             if(sinEspacios[j+1].equals("=")){//Hay un <=
+                                 String Aux="<=";
+                                 System.out.println("Comparador <=");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(Aux);
+                                 lexico_Identificador.add("Comparador");
+                                 j=j+1;
+                             }
+                             else if(sinEspacios[j+1].equals(">")){//Hay un <>
+                                 String Aux="<>";
+                                 System.out.println("Comparador <>");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(Aux);
+                                 lexico_Identificador.add("Comparador");
+                                 j=j+1;
+                             }
+                             else{
+                                 System.out.println("Comparador <");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(sinEspacios[j]);
+                                 lexico_Identificador.add("Comparador");
+                             }
+                         }
+                         else{
+                             System.out.println("Comparador <");
+                             lexico_ID.add(contadorID);
+                             lexico_Linea.add(contadorLinea);
+                             lexico_Token.add(sinEspacios[j]);
+                             lexico_Identificador.add("Comparador");
+                         }
+                     }
+
+                     if(sinEspacios[j].equals(">")){
+                         if(j+1<sinEspacios.length){
+                             if(sinEspacios[j+1].equals("=")){//Hay un >=
+                                 String Aux=">=";
+                                 System.out.println("Comparador >=");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(Aux);
+                                 lexico_Identificador.add("Comparador");
+                                 j=j+1;
+                             }
+                             else {
+                                 System.out.println("Comparador >");
+                                 lexico_ID.add(contadorID);
+                                 lexico_Linea.add(contadorLinea);
+                                 lexico_Token.add(sinEspacios[j]);
+                                 lexico_Identificador.add("Comparador");
+                             }
+                         }else {
+                             System.out.println("Comparador >");
+                             lexico_ID.add(contadorID);
+                             lexico_Linea.add(contadorLinea);
+                             lexico_Token.add(sinEspacios[j]);
+                             lexico_Identificador.add("Comparador");
+                         }
+                     }
                 }
                 else if(sinEspacios[j].matches(operador) && cadenaEncontrada==false && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Operadores: "+sinEspacios[j]);
@@ -622,7 +738,7 @@ public class Controller implements Initializable{
                     if(linea_conError==false) {//Evitar que ingrese varias veces la misma linea
                         System.out.println("Error");
                         if(!sinEspacios[j].isEmpty() && !sinEspacios[j].equals(" ") && prueba!=null && !prueba.isEmpty() && !sinEspacios[j].matches("\\s+")) {
-                            txtMensajes.appendText("Error léxico en la linea: " + contadorLinea + "\n");
+                            txtMensajes.appendText("Error léxico en la linea: " + contadorLinea +" Token: "+sinEspacios[j] + "\n");
                             linea_conError=true;
                             erroresLexicos=true;
                         }
@@ -647,7 +763,7 @@ public class Controller implements Initializable{
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
         ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
                 ,"sino","evalua","por_omision","finsel","final","finsi","finhazlo","hazlo_si","repite","finrepite","como","para"
-                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de"
+                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de","entonces"
         );
 
         ObservableList<String> Matematicos = FXCollections.observableArrayList("+","-","/","*","**");

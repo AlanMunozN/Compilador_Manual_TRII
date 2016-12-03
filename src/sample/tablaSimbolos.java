@@ -40,7 +40,7 @@ public class tablaSimbolos extends JFrame{
             dtm.addRow(data);
         }*/
         for(int row = 0; row < snt.Token_Tabla.size(); row ++) {
-            for (int column = 0; column < 5; column++) {//Va 6
+            for (int column = 0; column < 4; column++) {//Va 6
                 if(column == 0)
                     data[column] = snt.Linea_Tabla.get(row);
                 else if(column == 1)
@@ -49,8 +49,8 @@ public class tablaSimbolos extends JFrame{
                     data[column] = snt.Rol_Tabla.get(row);
                 else if(column == 3)
                     data[column] = snt.Ambito_Tabla.get(row);
-                else if(column == 4)
-                    data[column] = snt.valorInicial_Tabla.get(row);
+                //else if(column == 4)
+                  //  data[column] = snt.valorInicial_Tabla.get(row);
                 //else if(column == 5)
                   //  data[column] = snt.valorFinal_Tabla.get(row);
             }
@@ -63,11 +63,7 @@ public class tablaSimbolos extends JFrame{
         //Agregamos el JScrollPane al contenedor
         getContentPane().add(scrollPane, BorderLayout.CENTER);
         //manejamos la salida
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
     }
 }
