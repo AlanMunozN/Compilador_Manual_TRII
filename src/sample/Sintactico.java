@@ -226,6 +226,7 @@ public class Sintactico {
     boolean inicializaCoordenada_Y_VAR=false;
     boolean inicializaCoordenada_Y_INICIO=false;
 
+
     public void deteccionNodos_Tokens() {//Usar banderas para que entre a un area si encuentra la palabra principal
         int listaLexico_Size = ctrl.lexico_Token.size();
         int auxSize_Lexico = 0;
@@ -328,7 +329,15 @@ public class Sintactico {
                                 coodernada_Y.add(cordY);
                                 cordY = cordY + 100;
                             }
-                            if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {
+                            if (ctrl.lexico_Token.get(auxSize_Lexico).equals("si")) {
+                                si_Inicio = true;
+                                System.out.println("Va si");
+                                nombre_Nodo.add("<Si>");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                            }
+                            if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(") && si_Inicio==false) {
                                 invocacionInicio = true;
                                 System.out.println("Va invocación");
                                 nombre_Nodo.add("<Invocación>");
@@ -417,7 +426,15 @@ public class Sintactico {
                             coodernada_Y.add(cordY);
                             cordY = cordY + 100;
                         }
-                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(")) {//No puede haber invocaciones.
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("si")) {
+                            si_Inicio = true;
+                            System.out.println("Va si");
+                            nombre_Nodo.add("<Si>");
+                            coordenada_X.add(550);
+                            coodernada_Y.add(cordY);
+                            cordY = cordY + 100;
+                        }
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("(")&&si_Inicio==false) {//No puede haber invocaciones.
                             //Se quitaría
                             invocacionInicio = true;
                             System.out.println("Va invocación");
@@ -1621,6 +1638,7 @@ public class Sintactico {
     boolean invocacionInicio=false;
     boolean hazlo_siInicio=false;
     boolean repiteInicio=false;
+    boolean si_Inicio=false;
 
 
     //seecionInicio_Para funciones o procedimientos. Es copia de lo abajo
@@ -1636,6 +1654,7 @@ public class Sintactico {
          */
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+        String comp = ("(<|>|>=|<=|==|<>)");
 
         //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
         //  valorFinal_Tabla.add("");   Aquí seria para el valor final
@@ -1833,6 +1852,218 @@ public class Sintactico {
             }
         }
 
+        if(si_Inicio==true){
+            if(auxVar==0){
+                if(Token.equals("si")){
+                    System.out.println("si correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba si"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==1){
+                if(Token.equals("(")){
+                    System.out.println("( correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba ("+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==2){
+                if(Token.matches(Identificador)){
+                    System.out.println("Identificador correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba Identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba Identificador"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==3){
+                if(Token.matches(comp)){
+                    System.out.println("comparador correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba comparador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba comparador"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==4){
+                if(Token.matches("[0-9]+")){
+                    System.out.println("Numero correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }else{
+                    System.out.println("Se esperaba Numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba Numero"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==5){
+                if(Token.equals(")")){
+                    System.out.println(") correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba )");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba )"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==6){
+                if(Token.equals("entonces")){
+                    System.out.println("entonces correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba entonces");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba entonces"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 7) {//Asignación
+                if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 8) {
+                if (Token.equals(":=")) {
+                    System.out.println("Asignación correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba asignación :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba asiganción :=");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba asignación :="+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 9) {
+                if (Token.matches("[0-9]+")) {
+                    System.out.println("Tipo de dato correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }else if(Token.matches("[\"].*[\"]")){
+                    System.out.println("Tipo de dato correcto. Tipo cadema");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }
+                else {
+                    System.out.println("Se esperaba tipo de dato");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar == 10){
+                if(Token.equals(";")){
+                    System.out.println("Separador correcto");
+                    asignacionInicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    //inicializaBanderas_Var();
+
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Separador");
+                    Ambito_Tabla.add("L");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
+                }
+                else {
+                    System.out.println("Se esperada separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==11){
+                if(Token.equals("finsi")){
+                    System.out.println("finsi correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba sinsi");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba finsi"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar == 12){
+                if(Token.equals(";")){
+                    System.out.println("Separador correcto");
+                    si_Inicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    inicializaBanderas_Var();
+
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Separador");
+                    Ambito_Tabla.add("L");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
+                }
+                else {
+                    System.out.println("Se esperada separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+Linea;
+                }
+            }
+        }
+
 
 
         auxVar=auxVar+1;
@@ -1846,15 +2077,11 @@ public class Sintactico {
          */
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
         String tipoDato = "(bool|entero|largo|byte|string|flotante)";
+        String comp = ("(<|>|>=|<=|==|<>)");
 
 
         //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
-        Linea_Tabla.add(Linea.toString());
-        Token_Tabla.add(Token);
-        Rol_Tabla.add("");
-        Ambito_Tabla.add("");
-        valorInicial_Tabla.add("");
-        valorFinal_Tabla.add("");
+
 
 
         System.out.println("auxVar - Inicio: "+auxVar);
@@ -2036,6 +2263,219 @@ public class Sintactico {
                     //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba separador ;"+" En linea: "+Linea;
+                }
+            }
+        }
+
+
+        if(si_Inicio==true){
+            if(auxVar==0){
+                if(Token.equals("si")){
+                    System.out.println("si correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba si");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba si"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==1){
+                if(Token.equals("(")){
+                    System.out.println("( correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba (");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba ("+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==2){
+                if(Token.matches(Identificador)){
+                    System.out.println("Identificador correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba Identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba Identificador"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==3){
+                if(Token.matches(comp)){
+                    System.out.println("comparador correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba comparador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba comparador"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==4){
+                if(Token.matches("[0-9]+")){
+                    System.out.println("Numero correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }else{
+                    System.out.println("Se esperaba Numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba Numero"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==5){
+                if(Token.equals(")")){
+                    System.out.println(") correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba )");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba )"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==6){
+                if(Token.equals("entonces")){
+                    System.out.println("entonces correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba entonces");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba entonces"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 7) {//Asignación
+                if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba identificador"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 8) {
+                if (Token.equals(":=")) {
+                    System.out.println("Asignación correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba asignación :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba asiganción :=");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba asignación :="+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 9) {
+                if (Token.matches("[0-9]+")) {
+                    System.out.println("Tipo de dato correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }else if(Token.matches("[\"].*[\"]")){
+                    System.out.println("Tipo de dato correcto. Tipo cadema");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                }
+                else {
+                    System.out.println("Se esperaba tipo de dato");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba tipo de dato");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba tipo de dato"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar == 10){
+                if(Token.equals(";")){
+                    System.out.println("Separador correcto");
+                    asignacionInicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    //inicializaBanderas_Var();
+
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Separador");
+                    Ambito_Tabla.add("L");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
+                }
+                else {
+                    System.out.println("Se esperada separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+Linea;
+                }
+            }
+            if(auxVar==11){
+                if(Token.equals("finsi")){
+                    System.out.println("finsi correcto. Si");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                } else {
+                    System.out.println("Se esperaba sinsi");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba finsi"+" En linea: "+Linea;
+                }
+            }
+            if(auxVar == 12){
+                if(Token.equals(";")){
+                    System.out.println("Separador correcto");
+                    si_Inicio = false;
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(coordenadaX_VAR);
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    inicializaBanderas_Var();
+
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Separador");
+                    Ambito_Tabla.add("L");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
+                }
+                else {
+                    System.out.println("Se esperada separador ;");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+Linea;
                 }
             }
         }
