@@ -763,7 +763,7 @@ public class Controller implements Initializable{
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
         ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
                 ,"sino","evalua","por_omision","finsel","final","finsi","finhazlo","hazlo_si","repite","finrepite","como","para"
-                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de","entonces"
+                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de","entonces","leer","escribir","escribirSL"
         );
 
         ObservableList<String> Matematicos = FXCollections.observableArrayList("+","-","/","*","**");
