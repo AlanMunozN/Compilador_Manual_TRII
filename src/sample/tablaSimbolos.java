@@ -25,6 +25,7 @@ public class tablaSimbolos extends JFrame{
         final JTable table = new JTable(dtm);
         // insertamos las columnas
         //for(int column = 0; column < 5; column++){
+        dtm.addColumn("Directorio");
         dtm.addColumn("Linea");
         dtm.addColumn("Token");
         dtm.addColumn("Rol");
@@ -40,14 +41,16 @@ public class tablaSimbolos extends JFrame{
             dtm.addRow(data);
         }*/
         for(int row = 0; row < snt.Token_Tabla.size(); row ++) {
-            for (int column = 0; column < 4; column++) {//Va 6
+            for (int column = 0; column < 5; column++) {//Va 6
                 if(column == 0)
-                    data[column] = snt.Linea_Tabla.get(row);
+                    data[column] = snt.Directorio_Tabla.get(row);
                 else if(column == 1)
-                    data[column] = snt.Token_Tabla.get(row);
+                    data[column] = snt.Linea_Tabla.get(row);
                 else if(column == 2)
-                    data[column] = snt.Rol_Tabla.get(row);
+                    data[column] = snt.Token_Tabla.get(row);
                 else if(column == 3)
+                    data[column] = snt.Rol_Tabla.get(row);
+                else if(column == 4)
                     data[column] = snt.Ambito_Tabla.get(row);
                 //else if(column == 4)
                   //  data[column] = snt.valorInicial_Tabla.get(row);

@@ -25,6 +25,7 @@ public class Sintactico {
 
     //INICIA TABLA DE SIMBOLOS
     //Listas para tabla de símbolos
+    public static ArrayList<String> Directorio_Tabla = new ArrayList<>(Arrays.asList());
     public static ArrayList<String> Linea_Tabla = new ArrayList<>(Arrays.asList());
     public static ArrayList<String> Token_Tabla= new ArrayList<>(Arrays.asList());
     public static ArrayList<String> Rol_Tabla = new ArrayList<>(Arrays.asList());
@@ -662,6 +663,7 @@ public class Sintactico {
     public void seccionPrograma(String Token1, String Token2, Integer Linea){
 
         //Token1
+        Directorio_Tabla.add(System.getProperty("user.dir"));
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token1);
         Rol_Tabla.add("PR");
@@ -670,6 +672,7 @@ public class Sintactico {
         valorFinal_Tabla.add("");
 
         //Token 2
+        Directorio_Tabla.add(System.getProperty("user.dir"));
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token2);
         Rol_Tabla.add("Identificador");
@@ -702,6 +705,7 @@ public class Sintactico {
     public void seccionLibreria(String Token1, String Token2, Integer Linea){
 
         //Token1
+        Directorio_Tabla.add(System.getProperty("user.dir"));
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token1);
         Rol_Tabla.add("PR");
@@ -710,6 +714,7 @@ public class Sintactico {
         valorFinal_Tabla.add(" ");
 
         //Token 2
+        Directorio_Tabla.add(System.getProperty("user.dir"));
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token2);
         Rol_Tabla.add("Identificador");
@@ -880,6 +885,7 @@ public class Sintactico {
         System.out.println("auxVar = "+auxVar);
 
         //Se ocupa agregar para que se agregue dentro de cada validación, ya que cambiar lo de rol y ambito
+        Directorio_Tabla.add(System.getProperty("user.dir"));
         Linea_Tabla.add(Linea.toString());
         Token_Tabla.add(Token);
         Rol_Tabla.add("");
@@ -910,6 +916,7 @@ public class Sintactico {
                 //declaración de una función o procedimiento, ya que está prohibido
                 System.out.println("función correcto. Identificado");
                 funcionDetectado=true;
+                Directorio_Tabla.add(System.getProperty("user.dir"));
                 nombre_Nodo.add(Token);
                 coordenada_X.add(450);
                 coodernada_Y.add(cordY);
@@ -917,6 +924,7 @@ public class Sintactico {
                 funcion_procedimientoProhibido=true;//Encendemos bandera.
                 esperaFin_Func=true;
 
+                Directorio_Tabla.add(System.getProperty("user.dir"));
                 Linea_Tabla.add(Linea.toString());
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("PR");
@@ -937,6 +945,7 @@ public class Sintactico {
                 funcion_procedimientoProhibido=true;//Encendemos bandera
                 esperaFin_Proc=true;
 
+                Directorio_Tabla.add(System.getProperty("user.dir"));
                 Linea_Tabla.add(Linea.toString());
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("PR");
@@ -1014,6 +1023,7 @@ public class Sintactico {
                 inicializaBanderas_Var();
 
 
+                Directorio_Tabla.add(System.getProperty("user.dir"));
                 Linea_Tabla.add(Linea.toString());
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("Separador de instrucción");
@@ -1170,6 +1180,7 @@ public class Sintactico {
                 cordY=cordY+100;
                 inicializaBanderas_Var();
 
+                Directorio_Tabla.add(System.getProperty("user.dir"));
                 Linea_Tabla.add(Linea.toString());
                 Token_Tabla.add(Token);
                 Rol_Tabla.add("Separador de instrucción");
@@ -1200,6 +1211,7 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Identificador");
@@ -1284,6 +1296,7 @@ public class Sintactico {
                         cordY=cordY+100;
                         inicializaBanderas_Var();
                         funcionDetectado=false;
+                        Directorio_Tabla.add(System.getProperty("user.dir"));
                         Linea_Tabla.add(Linea.toString());
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
@@ -1320,6 +1333,7 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Directorio_Tabla.add(System.getProperty("user.dir"));
                         Linea_Tabla.add(Linea.toString());
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
@@ -1451,6 +1465,7 @@ public class Sintactico {
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
 
+                        Directorio_Tabla.add(System.getProperty("user.dir"));
                         Linea_Tabla.add(Linea.toString());
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
@@ -1532,6 +1547,7 @@ public class Sintactico {
                     coordenada_X.add(450);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Identificador");
@@ -1611,6 +1627,7 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Directorio_Tabla.add(System.getProperty("user.dir"));
                         Linea_Tabla.add(Linea.toString());
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
@@ -1692,6 +1709,7 @@ public class Sintactico {
                         coordenada_X.add(450);
                         coodernada_Y.add(cordY);
                         cordY=cordY+100;
+                        Directorio_Tabla.add(System.getProperty("user.dir"));
                         Linea_Tabla.add(Linea.toString());
                         Token_Tabla.add(Token);
                         Rol_Tabla.add("Identificador");
@@ -1980,6 +1998,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2009,6 +2028,7 @@ public class Sintactico {
                     escribir=false;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2085,6 +2105,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2190,6 +2211,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2219,6 +2241,7 @@ public class Sintactico {
                     leer=false;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2312,6 +2335,7 @@ public class Sintactico {
                     inicializaBanderas_Var();
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2421,6 +2445,7 @@ public class Sintactico {
                     invocacionInicio = false;
                     inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2603,6 +2628,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     //inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2641,6 +2667,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2896,6 +2923,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -2925,6 +2953,7 @@ public class Sintactico {
                     escribir=false;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3001,6 +3030,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3030,6 +3060,7 @@ public class Sintactico {
                     escribirSL=false;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3106,6 +3137,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3135,6 +3167,7 @@ public class Sintactico {
                     escribir=false;
 
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3223,6 +3256,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3526,6 +3560,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     //inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
@@ -3564,6 +3599,7 @@ public class Sintactico {
                     cordY=cordY+100;
                     inicializaBanderas_Var();
 
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
                     Linea_Tabla.add(Linea.toString());
                     Token_Tabla.add(Token);
                     Rol_Tabla.add("Separador");
