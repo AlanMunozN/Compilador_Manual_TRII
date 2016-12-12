@@ -391,6 +391,29 @@ public class Sintactico {
                             cordY=cordY+100;
 
                         }
+                        if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                            if(esperaFin_Para==true) {
+                                if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finpara")) {//Fin hazlo si
+                                    //según la bandera que esté encendida
+                                    //esperaFinFunc
+                                    //esperaFinProc
+                                    if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                        System.out.println("Fin para detectado");
+                                        nombre_Nodo.add("fin para");
+                                        coordenada_X.add(550);
+                                        coodernada_Y.add(cordY);
+                                        cordY = cordY + 100;
+
+                                        nombre_Nodo.add(";");
+                                        coordenada_X.add(550);
+                                        coodernada_Y.add(cordY);
+                                        cordY = cordY + 100;
+                                        //abrirArbol();
+                                        esperaFin_Para=false;
+                                    }
+                                }
+                            }
+                        }
 
                         System.out.println("Verificando en inicio: " + ctrl.lexico_Token.get(i));
                         //Agregar de minetras sea difrente a inicio como en la parte de var
@@ -590,6 +613,30 @@ public class Sintactico {
                                 cordY = cordY + 100;
                                 //abrirArbol();
                                 hazlo_siInicio=false;
+                            }
+                        }
+                    }
+                }
+
+                if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
+                    if(esperaFin_Para==true) {
+                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finpara")) {//Fin hazlo si
+                            //según la bandera que esté encendida
+                            //esperaFinFunc
+                            //esperaFinProc
+                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                System.out.println("Fin para detectado");
+                                nombre_Nodo.add("fin para");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+
+                                nombre_Nodo.add(";");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                                //abrirArbol();
+                                esperaFin_Para=false;
                             }
                         }
                     }
@@ -824,6 +871,7 @@ public class Sintactico {
 
     boolean esperaFin_Proc=false;
     boolean esperaFin_Func=false;
+    boolean esperaFin_Para=false;
 
     public void Asignacion_Var(String Token, Integer Linea){
         String Identificador = "([A-Z]{1,1}[a-zA-Z0-9]{2,254})";
@@ -1719,8 +1767,8 @@ public class Sintactico {
 
 
 
-        if(para==true && errorSintactico_Encontrado_Parar==false){
-            if (auxVar == 0) {//Asignación
+        if(para==true && errorSintactico_Encontrado_Parar==false){//COMANDO PARA(FOR_CODIGO)
+            if (auxVar == 0) {//para
                 if (Token.equals("para")) {//Asignar, llmar función o llamar procedimiento
                     System.out.println("para correcto");
                     nombre_Nodo.add(Token);
@@ -1735,8 +1783,8 @@ public class Sintactico {
                     mensajeError_Sintactico="Se esperaba para"+" En linea: "+Linea;
                 }
             }
-            if (auxVar == 1) {//Asignación
-                if (Token.matches(Identificador)) {//Asignar, llmar función o llamar procedimiento
+            if (auxVar == 1) {//Identificador
+                if (Token.matches(Identificador)) {//Asignar, llamar función o llamar procedimiento
                     System.out.println("Identificador correcto");
                     nombre_Nodo.add(Token);
                     coordenada_X.add(550);//Para la temporal de var cambiar este valor
@@ -1750,7 +1798,7 @@ public class Sintactico {
                     mensajeError_Sintactico="Se esperaba Identificador"+" En linea: "+Linea;
                 }
             }
-            if (auxVar == 2) {//Asignación
+            if (auxVar == 2) {//Como
                 if (Token.equals("como")) {//Asignar, llmar función o llamar procedimiento
                     System.out.println("como correcto");
                     nombre_Nodo.add(Token);
@@ -1765,8 +1813,38 @@ public class Sintactico {
                     mensajeError_Sintactico="Se esperaba como"+" En linea: "+Linea;
                 }
             }
-            if (auxVar == 0) {//Asignación
-                if (Token.equals("escribir")) {//Asignar, llmar función o llamar procedimiento
+            if (auxVar == 3) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("numero correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 4) {//:= Asignación
+                if (Token.equals(":=")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println(":= correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba :="+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 5) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
                     System.out.println("escribir correcto");
                     nombre_Nodo.add(Token);
                     coordenada_X.add(550);//Para la temporal de var cambiar este valor
@@ -1774,10 +1852,73 @@ public class Sintactico {
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
                 } else {
-                    System.out.println("Se esperaba escribir");
+                    System.out.println("Se esperaba numero");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
                     errorSintactico_Encontrado_Parar=true;
-                    mensajeError_Sintactico="Se esperaba escribir"+" En linea: "+Linea;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 6) {//hasta
+                if (Token.equals("hasta")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("hasta correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se epseraba hasta");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba hasta"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 7) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("escribir correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 8) {//modo
+                if (Token.equals("modo")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("modo correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperada modo");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba modo"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 9) {//incremento ++ decremento --
+                if (Token.equals("++") || Token.equals("--")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("inc/dec correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                    para=false;
+                    esperaFin_Para=true;
+                    inicializaBanderas_Var();
+                } else {
+                    System.out.println("Se esperada inc(dec");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba inc/dec"+" En linea: "+Linea;
                 }
             }
         }
@@ -2484,7 +2625,7 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                 } else {
-                    System.out.println("Se esperaba sinsi");
+                    System.out.println("Se esperaba finsi");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
                     errorSintactico_Encontrado_Parar=true;
                     mensajeError_Sintactico="Se esperaba finsi"+" En linea: "+Linea;
@@ -2538,6 +2679,164 @@ public class Sintactico {
 
 
         System.out.println("auxVar - Inicio: "+auxVar);
+
+
+
+        if(para==true && errorSintactico_Encontrado_Parar==false){//COMANDO PARA(FOR_CODIGO)
+            if (auxVar == 0) {//para
+                if (Token.equals("para")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("para correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba para");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba para"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 1) {//Identificador
+                if (Token.matches(Identificador)) {//Asignar, llamar función o llamar procedimiento
+                    System.out.println("Identificador correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba Identificador");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba Identificador"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 2) {//Como
+                if (Token.equals("como")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("como correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba como");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba como"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 3) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("numero correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 4) {//:= Asignación
+                if (Token.equals(":=")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println(":= correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba :=");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba :="+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 5) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("escribir correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 6) {//hasta
+                if (Token.equals("hasta")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("hasta correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se epseraba hasta");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba hasta"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 7) {//Tipo numero largo
+                if (Token.matches("[0-9]+") || Token.matches("[0-9]+[.][0-9]+")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("escribir correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperaba numero");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba numero"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 8) {//modo
+                if (Token.equals("modo")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("modo correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                } else {
+                    System.out.println("Se esperada modo");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba modo"+" En linea: "+Linea;
+                }
+            }
+            if (auxVar == 9) {//incremento ++ decremento --
+                if (Token.equals("++") || Token.equals("--")) {//Asignar, llmar función o llamar procedimiento
+                    System.out.println("inc/dec correcto");
+                    nombre_Nodo.add(Token);
+                    coordenada_X.add(550);//Para la temporal de var cambiar este valor
+                    coodernada_Y.add(cordY);
+                    cordY=cordY+100;
+                    archivoCorregido+=Token+" ";
+                    para=false;
+                    esperaFin_Para=true;
+                    inicializaBanderas_Var();
+                } else {
+                    System.out.println("Se esperada inc(dec");
+                    //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
+                    errorSintactico_Encontrado_Parar=true;
+                    mensajeError_Sintactico="Se esperaba inc/dec"+" En linea: "+Linea;
+                }
+            }
+        }
 
 
         if(escribir==true && errorSintactico_Encontrado_Parar==false){

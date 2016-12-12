@@ -605,7 +605,19 @@ public class Controller implements Initializable{
                         lexico_Identificador.add("Comentario Bloque");
                         juntaComentario_Bloque="";
                     }
-                }
+                } else if(sinEspacios[j].equals("++") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Incremento: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Identificador.add("Incremento");
+                 }else if(sinEspacios[j].equals("--") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Decremento: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Identificador.add("Decremento");
+                 }
                 else if(sinEspacios[j].matches(sep) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                     System.out.println("Separador: "+sinEspacios[j]);
                     lexico_ID.add(contadorID);
