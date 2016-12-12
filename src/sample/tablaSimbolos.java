@@ -41,9 +41,9 @@ public class tablaSimbolos extends JFrame{
             dtm.addRow(data);
         }*/
         for(int row = 0; row < snt.Token_Tabla.size(); row ++) {
-            for (int column = 0; column < 5; column++) {//Va 6
+            for (int column = 0; column <6; column++) {//Va 6
                 if(column == 0)
-                    data[column] = snt.Directorio_Tabla.get(row);
+                    data[column] = System.getProperty("user.dir");
                 else if(column == 1)
                     data[column] = snt.Linea_Tabla.get(row);
                 else if(column == 2)
@@ -52,14 +52,14 @@ public class tablaSimbolos extends JFrame{
                     data[column] = snt.Rol_Tabla.get(row);
                 else if(column == 4)
                     data[column] = snt.Ambito_Tabla.get(row);
-                //else if(column == 4)
-                  //  data[column] = snt.valorInicial_Tabla.get(row);
+                else if(column == 5)
+                    data[column] = "null";
                 //else if(column == 5)
                   //  data[column] = snt.valorFinal_Tabla.get(row);
             }
             dtm.addRow(data);
         }
-        //se define el tamaÒo
+        //se define el tamaño
         table.setPreferredScrollableViewportSize(new Dimension(900, 700));
         //Creamos un JscrollPane y le agregamos la JTable
         JScrollPane scrollPane = new JScrollPane(table);
