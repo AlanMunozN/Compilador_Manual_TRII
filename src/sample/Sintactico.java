@@ -331,11 +331,19 @@ public class Sintactico {
                                 coodernada_Y.add(cordY);
                                 cordY = cordY + 100;
                             }
+                            if (ctrl.lexico_Token.get(i).equals("para")) {
+                                para = true;
+                                System.out.println("Va para");
+                                nombre_Nodo.add("<Para>");
+                                coordenada_X.add(550);
+                                coodernada_Y.add(cordY);
+                                cordY = cordY + 100;
+                            }
                             if (ctrl.lexico_Token.get(i).equals("escribir")) {
                                 escribir = true;
                                 System.out.println("Va escribir");
                                 nombre_Nodo.add("<Escribir>");
-                                coordenada_X.add(450);
+                                coordenada_X.add(550);
                                 coodernada_Y.add(cordY);
                                 cordY = cordY + 100;
                             }
@@ -343,7 +351,7 @@ public class Sintactico {
                                 escribirSL = true;
                                 System.out.println("Va escribirSL");
                                 nombre_Nodo.add("<EscribirSL>");
-                                coordenada_X.add(450);
+                                coordenada_X.add(550);
                                 coodernada_Y.add(cordY);
                                 cordY = cordY + 100;
                             }
@@ -351,7 +359,7 @@ public class Sintactico {
                                 leer = true;
                                 System.out.println("Va leer");
                                 nombre_Nodo.add("<Leer>");
-                                coordenada_X.add(450);
+                                coordenada_X.add(550);
                                 coodernada_Y.add(cordY);
                                 cordY = cordY + 100;
                             }
@@ -472,6 +480,14 @@ public class Sintactico {
                             asignacionInicio = true;
                             System.out.println("Va asignación");
                             nombre_Nodo.add("<Asignación>");
+                            coordenada_X.add(450);
+                            coodernada_Y.add(cordY);
+                            cordY = cordY + 100;
+                        }
+                        if (ctrl.lexico_Token.get(i).equals("para")) {
+                            para = true;
+                            System.out.println("Va para");
+                            nombre_Nodo.add("<Para>");
                             coordenada_X.add(450);
                             coodernada_Y.add(cordY);
                             cordY = cordY + 100;

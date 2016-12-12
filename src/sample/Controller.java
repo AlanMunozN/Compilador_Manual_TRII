@@ -605,17 +605,30 @@ public class Controller implements Initializable{
                         lexico_Identificador.add("Comentario Bloque");
                         juntaComentario_Bloque="";
                     }
-                } else if(sinEspacios[j].equals("++") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                } else if(sinEspacios[j].matches("[+][+]") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                      System.out.println("Incremento: "+sinEspacios[j]);
                      lexico_ID.add(contadorID);
                      lexico_Linea.add(contadorLinea);
-                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Token.add("++");
                      lexico_Identificador.add("Incremento");
-                 }else if(sinEspacios[j].equals("--") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                 }else if(sinEspacios[j].matches("[-][-]") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
                      System.out.println("Decremento: "+sinEspacios[j]);
                      lexico_ID.add(contadorID);
                      lexico_Linea.add(contadorLinea);
-                     lexico_Token.add(sinEspacios[j]);
+                     lexico_Token.add("--");
+                     lexico_Identificador.add("Decremento");
+                 }
+                 else if(sinEspacios[j].matches("(.[++].)") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Incremento: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add("++");
+                     lexico_Identificador.add("Incremento");
+                 }else if(sinEspacios[j].matches("(.[--].)") && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
+                     System.out.println("Decremento: "+sinEspacios[j]);
+                     lexico_ID.add(contadorID);
+                     lexico_Linea.add(contadorLinea);
+                     lexico_Token.add("--");
                      lexico_Identificador.add("Decremento");
                  }
                 else if(sinEspacios[j].matches(sep) && cadenaEncontrada==false  && comentarioLinea_Encontrado==false && comentarioBloque_Encontrado==false){
@@ -775,7 +788,7 @@ public class Controller implements Initializable{
     public void palabrasLexico(){//Poblamos las lista para verificar las palabras
         ObservableList<String> Reservadas = FXCollections.observableArrayList("programa","var","inicio","fin","flotante","doble","caracter","cadena","mod","libreria","verdad","falso","seleccion","si"
                 ,"sino","evalua","por_omision","finsel","final","finsi","finhazlo","hazlo_si","repite","finrepite","como","para"
-                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de","entonces","leer","escribir","escribirSL"
+                ,"finpara","modo","finfunc","funcion","procedimiento","finproc","seccion","de","entonces","leer","escribir","escribirSL","hasta"
         );
 
         ObservableList<String> Matematicos = FXCollections.observableArrayList("+","-","/","*","**");
