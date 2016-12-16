@@ -37,6 +37,7 @@ public class Controller implements Initializable{
     @FXML
     ListView lsErrores;
 
+
     ObservableList<String> itemsErrores = FXCollections.observableArrayList();
 
     private static final String[] KEYWORDS = new String[] {
@@ -827,7 +828,7 @@ public class Controller implements Initializable{
             System.out.println("Identificador: "+lexico_Identificador.get(i));
     }
 
-    public void comenzarSintactico(){
+    public void comenzarSintactico() throws IOException{
         Sintactico sin = new Sintactico();
         sin.errorSintactico_Encontrado_Parar=false;
         if(erroresLexicos==false) {
@@ -840,8 +841,22 @@ public class Controller implements Initializable{
         }
         if(sin.errorSintactico_Encontrado_Parar==true){
             txtMensajes.appendText(sin.mensajeError_Sintactico);
+            sin.mostrarCodigoCorregido();
+            String obtenerLinea = txtMensajes.getText();
+            obtenerLinea = obtenerLinea.replaceAll("[^\\d.]", "");
+            System.out.println("Obtener Linea: "+obtenerLinea);
+            codeArea.moveTo(Integer.parseInt(obtenerLinea)-1,0);
+            codeArea.selectLine();
         }
 
+    }
+
+    public void MensajesSelectds(){
+        String obtenerLinea = txtMensajes.getText();
+        obtenerLinea = obtenerLinea.replaceAll("[^\\d.]", "");
+        System.out.println("Obtener Linea: "+obtenerLinea);
+        codeArea.moveTo(Integer.parseInt(obtenerLinea)-1,0);
+        codeArea.selectLine();
     }
 
     public void comenzarSemantico(){

@@ -8,16 +8,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import org.fxmisc.richtext.CodeArea?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <top>
       <HBox prefHeight="11.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Abrir" fx:id="btnAbrir" onAction="#cargarArchivo"/>
-            <Button mnemonicParsing="false" text="Guardar Rápido" onAction="#guardarRapido"/>
-            <Button mnemonicParsing="false" text="Guardar como" onAction="#guardarArchivo"/>
-            <Button mnemonicParsing="false" text="Léxico" onAction="#abrirLexico"/>
-            <Button mnemonicParsing="false" text="Sintáctico" onAction="#comenzarSintactico"/>
-            <Button mnemonicParsing="false" text="Semántico" onAction="#comenzarSemantico"/>
+            <Button fx:id="btnAbrir" mnemonicParsing="false" onAction="#cargarArchivo" text="Abrir" />
+            <Button mnemonicParsing="false" onAction="#guardarRapido" text="Guardar Rápido" />
+            <Button mnemonicParsing="false" onAction="#guardarArchivo" text="Guardar como" />
+            <Button mnemonicParsing="false" onAction="#abrirLexico" text="Léxico" />
+            <Button mnemonicParsing="false" onAction="#comenzarSintactico" text="Sintáctico" />
+            <Button mnemonicParsing="false" onAction="#comenzarSemantico" text="Semántico" />
             <Button mnemonicParsing="false" text="Generador" />
          </children>
          <padding>
@@ -28,8 +28,8 @@
    <bottom>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="txtMensajes" editable="false" prefHeight="84.0" prefWidth="459.0" />
-            <ListView fx:id="lsErrores" prefHeight="100.0" prefWidth="211.0" onMouseClicked="#manejoErrores"/>
+            <TextArea fx:id="txtMensajes" editable="false" onMouseClicked="#MensajesSelectds" prefHeight="84.0" prefWidth="459.0" />
+            <ListView fx:id="lsErrores" onMouseClicked="#manejoErrores" prefHeight="100.0" prefWidth="211.0" />
          </children>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />

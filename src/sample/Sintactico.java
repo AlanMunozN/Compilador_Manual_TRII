@@ -1,5 +1,20 @@
 package sample;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -9,12 +24,17 @@ import java.util.Hashtable;
  */
 public class Sintactico {
 
+
+
     Controller ctrl;
     int contadorNodos=1;
     int cordX=350, cordY=100;
     int hijosLibreria=0;
     int hijosVar=0;
     int hijosInicio=0;
+
+    @FXML
+    TextArea corregidoCorregido;
 
     boolean encontradaLibreria=false,encontradaVar=false,encontradaInicio=false;
 
@@ -228,14 +248,16 @@ public class Sintactico {
     boolean inicializaCoordenada_Y_INICIO=false;
 
 
-    public void deteccionNodos_Tokens() {//Usar banderas para que entre a un area si encuentra la palabra principal
+    public void deteccionNodos_Tokens() throws  IOException{//Usar banderas para que entre a un area si encuentra la palabra principal
         int listaLexico_Size = ctrl.lexico_Token.size();
         int auxSize_Lexico = 0;
         for (int i = 0; i < listaLexico_Size && errorSintactico_Encontrado_Parar==false; i++) {//Orden de la estructura del programa
             auxSize_Lexico = i + 1;
 
-            if(errorSintactico_Encontrado_Parar==true)//Sa termina for
+            if(errorSintactico_Encontrado_Parar==true) {//Sa termina for
+                mostrarCodigoCorregido();
                 break;
+            }
 
             System.out.println("Token actual: "+ctrl.lexico_Token.get(i));
 
@@ -402,11 +424,11 @@ public class Sintactico {
                         }
                         if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                             if(esperaFin_Para==true) {
-                                if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finpara")) {//Fin hazlo si
+                                if (ctrl.lexico_Token.get(i).equals("finpara")) {//Fin hazlo si
                                     //según la bandera que esté encendida
                                     //esperaFinFunc
                                     //esperaFinProc
-                                    if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                                    if (ctrl.lexico_Token.get(i + 1).equals(";")) {
                                         System.out.println("Fin para detectado");
                                         nombre_Nodo.add("fin para");
                                         coordenada_X.add(550);
@@ -586,11 +608,11 @@ public class Sintactico {
                 }
                 if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                     if(esperaFin_Proc==true) {
-                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finproc")) {//Cambiar por el por finfunc o finproc
+                        if (ctrl.lexico_Token.get(i).equals("finproc")) {//Cambiar por el por finfunc o finproc
                             //según la bandera que esté encendida
                             //esperaFinFunc
                             //esperaFinProc
-                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                            if (ctrl.lexico_Token.get(i + 1).equals(";")) {
                                 System.out.println("Fin procedimiento detectado");
                                 nombre_Nodo.add("finproc");
                                 coordenada_X.add(450);
@@ -637,11 +659,11 @@ public class Sintactico {
 
                 if (auxSize_Lexico < listaLexico_Size && auxSize_Lexico + 1 < listaLexico_Size) {
                     if(esperaFin_Para==true) {
-                        if (ctrl.lexico_Token.get(auxSize_Lexico).equals("finpara")) {//Fin hazlo si
+                        if (ctrl.lexico_Token.get(i).equals("finpara")) {//Fin hazlo si
                             //según la bandera que esté encendida
                             //esperaFinFunc
                             //esperaFinProc
-                            if (ctrl.lexico_Token.get(auxSize_Lexico + 1).equals(";")) {
+                            if (ctrl.lexico_Token.get(i + 1).equals(";")) {
                                 System.out.println("Fin para detectado");
                                 nombre_Nodo.add("fin para");
                                 coordenada_X.add(550);
@@ -667,8 +689,39 @@ public class Sintactico {
 
 
 
+    public void mostrarCodigoCorregido()throws IOException{
+        System.out.println("asdasdsa: "+archivoCorregido);
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("erroresCorregido.fxml"));
+        //root.getStylesheets().add(Controller.class.getResource("java-keywords.css").toExternalForm());//Importamos el css a usar
+        primaryStage.setTitle("Compilador Manual - Traductores II(Errores)");
+        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.show();
 
-    String archivoCorregido="";
+
+    }
+
+    public void agregarCorrecion(){
+        //corregidoCorregido.setText(archivoCorregido);
+        System.out.println("Corregio: "+archivoCorregido + archivoCorregido.length());
+        corregidoCorregido.setText(archivoCorregido);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    public static String archivoCorregido="";
     int auxLinea=1;
 
 
@@ -1810,6 +1863,15 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba para");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -1840,6 +1902,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba como");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -1900,6 +1970,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se epseraba hasta");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -1930,6 +2008,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperada modo");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -1966,6 +2052,16 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba escribir");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2014,13 +2110,6 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -2073,6 +2162,16 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
+
                 } else {
                     System.out.println("Se esperaba escribirSL");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2121,13 +2220,6 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -2179,6 +2271,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba leer");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2227,13 +2327,6 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -2486,6 +2579,14 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba si");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2570,6 +2671,14 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba entonces");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2656,7 +2765,7 @@ public class Sintactico {
                     System.out.println("Se esperada separador ;");
                     //ctrl.txtMensajes.appendText("\nSe esperaba separador ;");
                     errorSintactico_Encontrado_Parar=true;
-                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+(Linea-1);
+                    mensajeError_Sintactico="Se esperaba separador ; "+" En linea: "+(Linea);
                 }
             }
             if(auxVar==11){
@@ -2666,6 +2775,14 @@ public class Sintactico {
                     coordenada_X.add(550);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba finsi");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2734,6 +2851,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba para");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2764,6 +2889,14 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba como");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2824,6 +2957,15 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se epseraba hasta");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2854,6 +2996,15 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperada modo");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2891,6 +3042,15 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba escribir");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -2939,13 +3099,6 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -2998,6 +3151,15 @@ public class Sintactico {
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
                     archivoCorregido+=Token+" ";
+
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba escribirSL");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -3046,13 +3208,6 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -3153,13 +3308,7 @@ public class Sintactico {
                     cordY=cordY+100;
 
 
-                    Directorio_Tabla.add(System.getProperty("user.dir"));
-                    Linea_Tabla.add(Linea.toString());
-                    Token_Tabla.add(Token);
-                    Rol_Tabla.add("Separador");
-                    Ambito_Tabla.add("L");
-                    valorInicial_Tabla.add(" ");
-                    valorFinal_Tabla.add(" ");
+
                     archivoCorregido+=Token+" ";
                     archivoCorregido+=Token+" ";
                 }
@@ -3403,6 +3552,14 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba si");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -3502,6 +3659,14 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba entonces");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
@@ -3598,6 +3763,14 @@ public class Sintactico {
                     coordenada_X.add(coordenadaX_VAR);
                     coodernada_Y.add(cordY);
                     cordY=cordY+100;
+
+                    Directorio_Tabla.add(System.getProperty("user.dir"));
+                    Linea_Tabla.add(Linea.toString());
+                    Token_Tabla.add(Token);
+                    Rol_Tabla.add("Pr");
+                    Ambito_Tabla.add("G");
+                    valorInicial_Tabla.add(" ");
+                    valorFinal_Tabla.add(" ");
                 } else {
                     System.out.println("Se esperaba sinsi");
                     //ctrl.txtMensajes.appendText("\nSe esperaba identificador");
